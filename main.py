@@ -1,8 +1,13 @@
+from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+import urllib.request
+from pdf2image import convert_from_path
+import os
+import requests
 
 # Replace this with the path to your webdriver (e.g., chromedriver)
 webdriver_path = "./chromedriver/chromedriver"
@@ -106,22 +111,28 @@ def book_event(driver, event_url, amount=1):
 
     # Click the first span element that contains the text "Reserve"
     reserve_spans[0].click()
-
+    
     # Wait for the opt out of communications box to load
     wait = WebDriverWait(driver, 10)
     wait.until(EC.presence_of_element_located((By.ID, '21910-radio-no')))
 
     # Opt out of the communications
     driver.find_element(By.ID, '21910-radio-no').click()
-
-    select_elements_by_text(driver, 'span', 'CONFIRM')[0].click()
+    
+    # element = select_elements_by_text(driver, 'span', 'CONFIRM')
+    select_elements_by_text(driver, "span", "CONFIRM")[0].click()
+    # element[0].click()
 
     # Wait for view tickets button to appear
     wait = WebDriverWait(driver, 10)
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.kBclag')))
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.fFfpEg span')))
 
     # Click the view tickets button
-    select_elements_by_text(driver, 'span', 'View tickets')[0].click()
+    elements = []
+    while len(elements) < 1:
+        elements = select_elements_by_text(driver, 'span', 'View tickets')
+
+    elements[0].click()
 
     # Wait for the tickets to load
     wait = WebDriverWait(driver, 10)
@@ -129,14 +140,53 @@ def book_event(driver, event_url, amount=1):
 
     # Return the ticket pdf url
     ticket_url = driver.find_element(By.CSS_SELECTOR, '.sc-86ac4539-1 > a:nth-child(4)').get_attribute('href')
+
+    ticket_data = {
+        "ticket_url": ticket_url,
+        "event_name": driver.find_element(By.CSS_SELECTOR, '.fhMDRR h2 span').text,
+    }
+
     # Wait 10 seconds
     driver.implicitly_wait(10)
 
-    return ticket_url
+    return ticket_data
 
+
+def download_ticket(ticket_url):
+    # Download the ticket pdf
+    print(f"Downloading ticket from '{ticket_url}'")
+    urllib.request.urlretrieve(ticket_url, "downloads/filename.pdf")
+    return "downloads/filename.pdf"
+
+
+def pdf_to_image(pdf_path, dpi=200):
+    images = convert_from_path(pdf_path, dpi)
+
+
+    for i, image in enumerate(images):
+        image_path = os.path.join("images", f"page_{i+1}.png")
+        image.save(image_path, "PNG")
+
+    print(f"Converted {len(images)} pages from '{pdf_path}' to images in 'images'")
+    return image_path
+
+
+# Upload image to server with requests
+def upload_image(image_path):
+    file = {'file': open(image_path, 'rb')}
+    r = requests.post("https://media.james-clarke.ynh.fr/", files=file)
+
+    # Add get/ beteween the url and the unique id
+    elements = r.text.strip("\n").split("/")
+    elements.insert(3, "get")
+
+    # Join the elements back together
+    media_url = "/".join(elements)
+    return media_url
 
 # Login to the website
 login(driver)
+
 """
 # Get the events data
 events_data = get_events_data(driver)
@@ -148,8 +198,17 @@ for event in events_data:
 
 
 # Book the first event
-ticket_url = book_event(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-95333642")
-print(ticket_url)
+#ticket_data = book_event(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-176201491")
+#print(ticket_data)
+
+# Download the ticket
+#file_path = Path(download_ticket(ticket_data["ticket_url"]))
+
+# Convert the ticket pdf to images
+#pdf_to_image(file_path)
+
+
+# Send POST request to server with link to image
 
 
 # Close the driver

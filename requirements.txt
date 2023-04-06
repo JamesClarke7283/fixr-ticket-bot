@@ -1,1 +1,3 @@
 selenium
+pdf2image
+requests
