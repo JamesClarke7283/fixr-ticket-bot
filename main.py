@@ -8,6 +8,7 @@ import urllib.request
 from pdf2image import convert_from_path
 import os
 import requests
+import pyperclip
 
 # Replace this with the path to your webdriver (e.g., chromedriver)
 webdriver_path = "./chromedriver/chromedriver"
@@ -161,8 +162,7 @@ def download_ticket(ticket_url):
 
 def pdf_to_image(pdf_path, dpi=200):
     images = convert_from_path(pdf_path, dpi)
-
-
+    os.makedirs("images", exist_ok=True)
     for i, image in enumerate(images):
         image_path = os.path.join("images", f"page_{i+1}.png")
         image.save(image_path, "PNG")
@@ -184,8 +184,57 @@ def upload_image(image_path):
     media_url = "/".join(elements)
     return media_url
 
+
+def get_event_data(driver, event_url):
+    driver.get(event_url)
+
+    # Wait for the event title to load
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.sc-3f2220de-8')))
+
+    lgusername = "PublicVH"
+
+    # Get the event title
+    event_name = driver.find_element(By.CSS_SELECTOR, '.sc-3f2220de-8').text
+
+    # Wait for the event organizer to load
+    driver.wait = WebDriverWait(driver, 10)
+    driver.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.hexfOP')))
+
+    # Get the event organizer
+    event_organizer = driver.find_element(By.CSS_SELECTOR, '.sc-83caa70f-1 > a').text
+
+    # Get the event start date
+    event_start_date = driver.find_element(By.CSS_SELECTOR, '.cLJFrd > div:nth-child(1)').text
+    
+    # Get the event end date
+    event_end_date = driver.find_element(By.CSS_SELECTOR, '.cLJFrd > div:nth-child(2)').text
+
+    country = "United Kingdom"
+
+    # Get the event location
+    driver.find_element(By.CSS_SELECTOR, '.cFXLI').click()
+    # get from clipboard
+    event_location = pyperclip.paste()
+
+    # Put in a dictionary
+    event_data = {
+        "lgusername": lgusername,
+        "data": {
+            "event_name": event_name,
+            "event_organizer": event_organizer,
+            "event_start_date": event_start_date,
+            "event_end_date": event_end_date,
+            "event_location": event_location,
+            "country": country
+        }
+        
+    }
+    return event_data
+
 # Login to the website
-login(driver)
+
+#login(driver)
 
 """
 # Get the events data
@@ -196,20 +245,26 @@ for event in events_data:
     print(event)
 """
 
-
+"""
 # Book the first event
-#ticket_data = book_event(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-176201491")
-#print(ticket_data)
+ticket_data = book_event(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-176201491")
+print(ticket_data)
 
 # Download the ticket
-#file_path = Path(download_ticket(ticket_data["ticket_url"]))
+file_path = Path(download_ticket(ticket_data["ticket_url"]))
 
 # Convert the ticket pdf to images
-#pdf_to_image(file_path)
+pdf_to_image(file_path)
 
-
+# Upload the image to the server
+media_url = upload_image("images/page_1.png")
+print(media_url)
 # Send POST request to server with link to image
+"""
 
+# Get the event data
+event_data = get_event_data(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-176201491")
+print(event_data)
 
 # Close the driver
 driver.quit()
