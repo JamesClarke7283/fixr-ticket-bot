@@ -9,16 +9,14 @@ from pdf2image import convert_from_path
 import os
 import requests
 import pyperclip
+from datetime import datetime
+import re
 
 # Replace this with the path to your webdriver (e.g., chromedriver)
 webdriver_path = "./chromedriver/chromedriver"
 
-# Configure Chrome options to use Chromium
-chrome_options = Options()
-chrome_options.binary_location = "/home/impulse/.guix-profile/bin/chromium"
-
 # Initialize the webdriver with Chromium
-driver = webdriver.Chrome(executable_path=webdriver_path, options=chrome_options)
+driver = webdriver.Chrome(executable_path=webdriver_path)
 
 
 def login(driver):
@@ -67,7 +65,13 @@ def get_events_data(driver):
         event_date = event_card.find_element(By.CSS_SELECTOR, '.kWawed span').text
         event_locations = event_card.find_elements(By.CSS_SELECTOR, '.iNmIef span')
         event_location = ', '.join([event_location.text for event_location in event_locations])
-        event_price = event_card.find_element(By.CSS_SELECTOR, '.sc-a0e7c443-7 span').text
+        try:
+            event_price = select_elements_by_text(event_card, 'span', 'Tickets from')[0].text.replace("Tickets from", "").replace("£", "")
+        except:
+            element = select_elements_by_text(event_card, 'span', 'Free')[0].text
+            if element.lower() == "Free".lower():
+                event_price = "0"
+
         event_url = event_card.get_attribute('href')
         event_data = {
             'title': event_title,
@@ -115,13 +119,22 @@ def book_event(driver, event_url, amount=1):
     
     # Wait for the opt out of communications box to load
     wait = WebDriverWait(driver, 10)
-    wait.until(EC.presence_of_element_located((By.ID, '21910-radio-no')))
+    wait.until(EC.presence_of_element_located((By.ID, '11327-radio-no')))
 
     # Opt out of the communications
-    driver.find_element(By.ID, '21910-radio-no').click()
+    driver.find_element(By.ID, '11327-radio-no').click()
     
     # element = select_elements_by_text(driver, 'span', 'CONFIRM')
-    select_elements_by_text(driver, "span", "CONFIRM")[0].click()
+    #try:
+    element = []
+    while len(element) < 1:
+        try:
+            element = select_elements_by_text(driver, 'span', 'CONFIRM')
+        except:
+            element = select_elements_by_text(driver, 'span', 'CONFIRM')
+            print("Couldn't find confirm button")
+            #element = select_elements_by_text(driver, "span", "CONTINUE")[0].click()
+
     # element[0].click()
 
     # Wait for view tickets button to appear
@@ -142,13 +155,14 @@ def book_event(driver, event_url, amount=1):
     # Return the ticket pdf url
     ticket_url = driver.find_element(By.CSS_SELECTOR, '.sc-86ac4539-1 > a:nth-child(4)').get_attribute('href')
 
+    # Return the ticket price
+    ticket_price = driver.find_element(By.CSS_SELECTOR, '.fhMDRR > div:nth-child(2) > div:nth-child(1) > div:nth-child(7)').text
+
     ticket_data = {
+        "price": ticket_price,
         "ticket_url": ticket_url,
         "event_name": driver.find_element(By.CSS_SELECTOR, '.fhMDRR h2 span').text,
     }
-
-    # Wait 10 seconds
-    driver.implicitly_wait(10)
 
     return ticket_data
 
@@ -185,6 +199,37 @@ def upload_image(image_path):
     return media_url
 
 
+def book_event_and_upload(driver, event_url, amount=1):
+    # Book the first event
+    ticket_data = book_event(driver, event_url, amount=amount)
+    print(ticket_data)
+
+    # Download the ticket
+    file_path = Path(download_ticket(ticket_data["ticket_url"]))
+
+    # Convert the ticket pdf to images
+    pdf_to_image(file_path)
+
+    # Upload the image to the server
+    media_url = upload_image("images/page_1.png")
+    return media_url, ticket_data
+
+
+def convert_date_string(date_string):
+
+    # Remove ordinal (i.e., 'th', 'st', 'nd', 'rd') from the input string
+    input_date_str_cleaned = re.sub(r'(\d)(st|nd|rd|th)', r'\1', date_string)
+
+    # Parse the input string
+    input_date = datetime.strptime(input_date_str_cleaned[4::], "%d %b at %I:%M %p (BST)")
+    # Set the year to the current year
+    input_date = input_date.replace(year=datetime.now().year)
+
+    # Format the parsed datetime object
+    output_date_str = input_date.strftime("%d/%m/%Y, %H:%M")
+    return output_date_str
+
+
 def get_event_data(driver, event_url):
     driver.get(event_url)
 
@@ -204,37 +249,93 @@ def get_event_data(driver, event_url):
     # Get the event organizer
     event_organizer = driver.find_element(By.CSS_SELECTOR, '.sc-83caa70f-1 > a').text
 
-    # Get the event start date
-    event_start_date = driver.find_element(By.CSS_SELECTOR, '.cLJFrd > div:nth-child(1)').text
-    
-    # Get the event end date
-    event_end_date = driver.find_element(By.CSS_SELECTOR, '.cLJFrd > div:nth-child(2)').text
+    try:
+        # Get the event start date
+        event_start_date = driver.find_element(By.CSS_SELECTOR, '.cLJFrd > div:nth-child(1)').text.replace("Opens ", "")
+        event_start_date = convert_date_string(event_start_date)
 
+        # Get the event end date
+        event_end_date = driver.find_element(By.CSS_SELECTOR, '.cLJFrd > div:nth-child(2)').text.replace("Last entry ", "")
+        event_end_date = convert_date_string(event_end_date)
+    except:
+        event_start_date = "N/A"
+        event_end_date = "N/A"
+    
     country = "United Kingdom"
 
     # Get the event location
-    driver.find_element(By.CSS_SELECTOR, '.cFXLI').click()
-    # get from clipboard
-    event_location = pyperclip.paste()
+    try:
+        driver.find_element(By.CSS_SELECTOR, '.cFXLI').click()
+        # get from clipboard
+        event_location = pyperclip.paste()
+    except:
+        event_location = "N/A"
+
+    try:
+        event_price = select_elements_by_text(driver, "span", "Tickets from")[0].text
+    except:
+        element = select_elements_by_text(driver, "span", "From free")[0].text
+        if element.lower() == "Free".lower():
+            event_price = "0"
+
 
     # Put in a dictionary
     event_data = {
         "lgusername": lgusername,
         "data": {
-            "event_name": event_name,
-            "event_organizer": event_organizer,
-            "event_start_date": event_start_date,
-            "event_end_date": event_end_date,
-            "event_location": event_location,
-            "country": country
+            "eventname": event_name,
+            # "event_organizer": event_organizer,
+            "eventstime": event_start_date,
+            "eventetime": event_end_date,
+            "eventlocation": event_location,
+            "eventcountry": country,
+            "purchaseSource": "Fixr",
+            "rType": "create",
         }
         
     }
-    return event_data
+    return event_data, event_price
+
+
+def post_event_data(driver, event_url):
+    # Get the event data
+    event_data = get_event_data(driver, event_url)
+    event_resell_data = event_data[0]
+    print(event_resell_data)
+
+    # Book and get the ticket url
+    ticket_data = book_event_and_upload(driver, event_url)
+    print(ticket_data)
+
+    event_resell_data["tickData"] = []
+
+    event_resell_data["tickData"].append({"name": event_resell_data["data"]["event_name"], "media": ticket_data[0], "price": event_data[1]})
+
+    # Add the ticket url to the event data
+
+    # Send a POST request to the server with the event data
+    r = requests.post("https://api.vivushub.com/createResell", json=event_resell_data)
+    print("VivusHub response:", end="\n\n")
+    print(r.text)
+    return r.text
+
+
+def attach_credit_card(driver, card_number, expiry_date, cvv):
+    driver.get("https://fixr.co/my-profile")
+
+    # Wait for the credit card number input to load
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.sc-38aacd29-2')))
+
+    # Click the add credit card button
+    driver.find_element(By.CSS_SELECTOR, '.sc-38aacd29-2').click()
+
 
 # Login to the website
 
-#login(driver)
+login(driver)
+
+#attach_credit_card(driver, "4165490167909650", "04/28", "445")
 
 """
 # Get the events data
@@ -245,26 +346,19 @@ for event in events_data:
     print(event)
 """
 
-"""
-# Book the first event
-ticket_data = book_event(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-176201491")
-print(ticket_data)
 
-# Download the ticket
-file_path = Path(download_ticket(ticket_data["ticket_url"]))
 
-# Convert the ticket pdf to images
-pdf_to_image(file_path)
 
-# Upload the image to the server
-media_url = upload_image("images/page_1.png")
-print(media_url)
+
 # Send POST request to server with link to image
-"""
+data = post_event_data(driver, "https://fixr.co/event/event-by-tester-gamer-tickets-789878529")
+
+# Print the response
+print(data)
 
 # Get the event data
-event_data = get_event_data(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-176201491")
-print(event_data)
+#event_data = get_event_data(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-176201491")
+#print(event_data)
 
 # Close the driver
 driver.quit()

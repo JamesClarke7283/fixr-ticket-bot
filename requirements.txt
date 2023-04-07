@@ -1,3 +1,4 @@
 selenium
 pdf2image
 requests
+pyperclip
