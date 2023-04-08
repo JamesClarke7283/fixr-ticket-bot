@@ -12,7 +12,7 @@ import pyperclip
 from datetime import datetime
 import re
 
-from .utilities import select_elements_by_text, convert_date_string
+from .utilities import select_elements_by_text, convert_date_string, select_elements_by_text_contains
 
 
 def get_events_data(driver: webdriver, pages=10):
@@ -98,13 +98,13 @@ def get_event_data(driver, event_url):
         event_location = "N/A"
 
     wait = WebDriverWait(driver, 10)
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'b')))
+    wait.until(EC.presence_of_element_located((By.XPATH, '//b[contains(text(), "Tickets from") or contains(text(), "From free")]')))
 
     # Get the event price
     try:
-        event_price = select_elements_by_text(driver, "b", "Tickets from")[0].text
+        event_price = select_elements_by_text_contains(driver, "b", "Tickets from")[0].text
     except:
-        element = select_elements_by_text(driver, "b", "From free")[0].text
+        element = select_elements_by_text_contains(driver, "b", "From free")[0].text
         if element.lower() == "From Free".lower():
             event_price = "0"
 

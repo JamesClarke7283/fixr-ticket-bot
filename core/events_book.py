@@ -58,6 +58,14 @@ def book_event(driver: webdriver, event_url, amount=1, is_free=True):
 
     element[0].click()
 
+    # Check if needs payment
+    if not is_free:
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.presence_of_element_located((By.XPATH, '//h3[contains(text(), "Payment")]')))
+
+        # Click the pay button
+        element = select_elements_by_text(driver, 'span', 'PAY NOW')[0].click()
+
     # Wait for view tickets button to appear
     wait = WebDriverWait(driver, 10)
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.fFfpEg span')))
