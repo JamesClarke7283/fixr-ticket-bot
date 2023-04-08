@@ -97,6 +97,10 @@ def get_event_data(driver, event_url):
     except:
         event_location = "N/A"
 
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'b')))
+
+    # Get the event price
     try:
         event_price = select_elements_by_text(driver, "b", "Tickets from")[0].text
     except:
