@@ -1,19 +1,17 @@
 {
     "lgusername": "PublicVH",
     "data": {
-        "event_name": "Event By Tester Gamer",
-        "event_organizer": "John Demo",
+        "eventname": "Event By Tester Gamer",
         "eventstime": "N/A",
         "eventetime": "N/A",
-        "event_location": "N/A",
-        "country": "United Kingdom",
+        "eventlocation": "N/A",
+        "eventcountry": "United Kingdom",
         "purchaseSource": "Fixr",
-        "rType": "create",
+        "rType": "create"
     },
-
     "tickData": [{
-        "media": "https://media.james-clarke.ynh.fr/get/InUcsL/page_1.png",
-        "price": "Wed, 19 Apr, 10:00 pm BST",
-        "event_name": "Event By Tester Gamer"
+        "name": "Event By Tester Gamer",
+        "media": "https://media.james-clarke.ynh.fr/get/TiYkx7/page_1.png",
+        "price": "0"
     }]
 }

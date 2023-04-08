@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import urllib.request
+import json
 from pdf2image import convert_from_path
 import os
 import requests
@@ -19,7 +20,7 @@ webdriver_path = "./chromedriver/chromedriver"
 driver = webdriver.Chrome(executable_path=webdriver_path)
 
 
-def login(driver):
+def login(driver, username, password):
     # The URL to be scraped
     url = "https://fixr.co/login"
     driver.get(url)
@@ -32,8 +33,8 @@ def login(driver):
     login_form = driver.find_element(By.CSS_SELECTOR, 'form')
 
     # Fill in the login form
-    login_form.find_element(By.CSS_SELECTOR, 'input#login-email').send_keys('james@james-clarke.ynh.fr')
-    login_form.find_element(By.CSS_SELECTOR, 'input#login-password').send_keys('7smrzVxzPuK6FPH')
+    login_form.find_element(By.CSS_SELECTOR, 'input#login-email').send_keys(username)
+    login_form.find_element(By.CSS_SELECTOR, 'input#login-password').send_keys(password)
 
     # Submit the login form
     login_form.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
@@ -122,7 +123,7 @@ def book_event(driver, event_url, amount=1):
     wait.until(EC.presence_of_element_located((By.ID, '11327-radio-no')))
 
     # Opt out of the communications
-    driver.find_element(By.ID, '11327-radio-no').click()
+    driver.find_element(By.XPATH, '//*[contains(@id, "radio-no")]').click()
     
     # element = select_elements_by_text(driver, 'span', 'CONFIRM')
     #try:
@@ -135,7 +136,7 @@ def book_event(driver, event_url, amount=1):
             print("Couldn't find confirm button")
             #element = select_elements_by_text(driver, "span", "CONTINUE")[0].click()
 
-    # element[0].click()
+    element[0].click()
 
     # Wait for view tickets button to appear
     wait = WebDriverWait(driver, 10)
@@ -155,11 +156,7 @@ def book_event(driver, event_url, amount=1):
     # Return the ticket pdf url
     ticket_url = driver.find_element(By.CSS_SELECTOR, '.sc-86ac4539-1 > a:nth-child(4)').get_attribute('href')
 
-    # Return the ticket price
-    ticket_price = driver.find_element(By.CSS_SELECTOR, '.fhMDRR > div:nth-child(2) > div:nth-child(1) > div:nth-child(7)').text
-
     ticket_data = {
-        "price": ticket_price,
         "ticket_url": ticket_url,
         "event_name": driver.find_element(By.CSS_SELECTOR, '.fhMDRR h2 span').text,
     }
@@ -272,10 +269,10 @@ def get_event_data(driver, event_url):
         event_location = "N/A"
 
     try:
-        event_price = select_elements_by_text(driver, "span", "Tickets from")[0].text
+        event_price = select_elements_by_text(driver, "b", "Tickets from")[0].text
     except:
-        element = select_elements_by_text(driver, "span", "From free")[0].text
-        if element.lower() == "Free".lower():
+        element = select_elements_by_text(driver, "b", "From free")[0].text
+        if element.lower() == "From Free".lower():
             event_price = "0"
 
 
@@ -309,9 +306,10 @@ def post_event_data(driver, event_url):
 
     event_resell_data["tickData"] = []
 
-    event_resell_data["tickData"].append({"name": event_resell_data["data"]["event_name"], "media": ticket_data[0], "price": event_data[1]})
-
-    # Add the ticket url to the event data
+    event_resell_data["tickData"].append({"name": event_resell_data["data"]["eventname"], "media": ticket_data[0], "price": event_data[1]})
+    print("Event resell data sent to VivusHub:")
+    print(json.dumps(indent=4, obj=event_resell_data))
+    print()
 
     # Send a POST request to the server with the event data
     r = requests.post("https://api.vivushub.com/createResell", json=event_resell_data)
@@ -320,22 +318,12 @@ def post_event_data(driver, event_url):
     return r.text
 
 
-def attach_credit_card(driver, card_number, expiry_date, cvv):
-    driver.get("https://fixr.co/my-profile")
-
-    # Wait for the credit card number input to load
-    wait = WebDriverWait(driver, 10)
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.sc-38aacd29-2')))
-
-    # Click the add credit card button
-    driver.find_element(By.CSS_SELECTOR, '.sc-38aacd29-2').click()
-
+# Make screen fullscreen
+driver.maximize_window()
 
 # Login to the website
 
-login(driver)
-
-#attach_credit_card(driver, "4165490167909650", "04/28", "445")
+login(driver, 'james@james-clarke.ynh.fr', '7smrzVxzPuK6FPH')
 
 """
 # Get the events data
