@@ -52,8 +52,11 @@ def book_event(driver: webdriver, event_url, amount=1, is_free=True, excluded_ke
             if ticket['price'] == 0:
                 ticket_index_selected = index
                 break
-            elif ticket['price'] > 0:
+            elif ticket['price'] > 0 and ticket_index_selected is None:
                 ticket_index_selected = index
+            elif ticket['price'] < all_tickets_data[ticket_index_selected]["price"]:
+                ticket_index_selected = index
+
     print(ticket_index_selected)
 
     # Find the input box
