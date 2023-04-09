@@ -1,7 +1,7 @@
 {
     "lgusername": "PublicVH",
     "data": {
-        "eventname": "Event By Tester Gamer",
+        "eventname": "Event By Tester Gamer 3",
         "eventstime": "N/A",
         "eventetime": "N/A",
         "eventlocation": "N/A",
@@ -10,8 +10,8 @@
         "rType": "create"
     },
     "tickData": [{
-        "name": "Event By Tester Gamer",
-        "media": "https://media.james-clarke.ynh.fr/get/TiYkx7/page_1.png",
-        "price": "0"
+        "name": "Test ticket 2",
+        "media": "https://media.james-clarke.ynh.fr/get/nE8ffs/page_1.png",
+        "price": 3.0
     }]
 }

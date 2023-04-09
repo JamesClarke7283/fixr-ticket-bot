@@ -102,9 +102,10 @@ def get_event_data(driver, event_url):
 
     # Get the event price
     try:
-        event_price = select_elements_by_text_contains(driver, "b", "Tickets from")[0].text
+        event_price = driver.find_element(By.XPATH, '//b[contains(text(), "Tickets from")]').text
+        print("Event Price:\t", event_price)
     except:
-        element = select_elements_by_text_contains(driver, "b", "From free")[0].text
+        element = driver.find_element(By.XPATH, '//b[contains(text(), "From free")]').text
         if element.lower() == "From Free".lower():
             event_price = "0"
 
