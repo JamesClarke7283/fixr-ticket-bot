@@ -5,9 +5,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import json
 import requests
-from .utilities import select_elements_by_text, download_ticket, pdf_to_image, upload_image
+from .utilities import download_ticket, pdf_to_image, upload_image
 from .events_info import get_event_data
-
+from .vivus_api import get_excluded_keywords, create_resell_event
 
 def get_ticket_data(driver):
 
@@ -28,6 +28,8 @@ def get_ticket_data(driver):
             ticket_price = "0"
         tickets_data.append({'name': ticket_name, 'price': float(ticket_price)})
     return tickets_data
+
+
 
 
 def get_tickets_inp_boxes(driver):
@@ -62,7 +64,7 @@ def book_event(driver: webdriver, event_url, amount=1, excluded_keywords=[]):
 
     print(ticket_index_selected)
     is_free = all_tickets_data[ticket_index_selected]['price'] == 0
-
+    print("IS FREE:", is_free)
     # Find the input box
     print("get input boxes:")
     ticket_inp_boxes = get_tickets_inp_boxes(driver)
@@ -73,10 +75,10 @@ def book_event(driver: webdriver, event_url, amount=1, excluded_keywords=[]):
     driver.implicitly_wait(2)
 
     # Filter the span elements based on their text content
-    reserve_spans = select_elements_by_text(driver, 'span', 'Reserve')
+    reserve_span = driver.find_element(By.XPATH, '//button[.//span[text()="Reserve"]]')
 
     # Click the first span element that contains the text "Reserve"
-    reserve_spans[0].click()
+    reserve_span.click()
 
     # Wait for the opt out of communications box to load
     wait = WebDriverWait(driver, 10)
@@ -92,8 +94,8 @@ def book_event(driver: webdriver, event_url, amount=1, excluded_keywords=[]):
         element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "CONFIRM")]]')
     else:
         wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.XPATH, '//button[.//span[contains(text(), "CONTINUE")]]')))
-        element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "CONTINUE")]]')
+        wait.until(EC.presence_of_element_located((By.XPATH, '//button[.//span[contains(text(), "Continue")]]')))
+        element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "Continue")]]')
 
     element.click()
 
@@ -103,18 +105,17 @@ def book_event(driver: webdriver, event_url, amount=1, excluded_keywords=[]):
         wait.until(EC.presence_of_element_located((By.XPATH, '//h3[contains(text(), "Payment")]')))
 
         # Click the pay button
-        element = select_elements_by_text(driver, 'span', 'PAY NOW')[0].click()
+        element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "PAY NOW")]]')
+        element.click()
 
     # Wait for view tickets button to appear
     wait = WebDriverWait(driver, 10)
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.fFfpEg span')))
+    wait.until(EC.visibility_of_element_located((By.XPATH, '//h3[contains(text(), "You\'re all set")]')))
 
     # Click the view tickets button
-    elements = []
-    while len(elements) < 1:
-        elements = select_elements_by_text(driver, 'span', 'View tickets')
-
-    elements[0].click()
+    element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "View tickets")]]')
+    print("View tickets button clicked", element)
+    element.click()
 
     # Wait for the tickets to load
     wait = WebDriverWait(driver, 10)
@@ -136,35 +137,32 @@ def book_event(driver: webdriver, event_url, amount=1, excluded_keywords=[]):
 def post_event_data(driver, event_url):
     # Get the event data
     event_data = get_event_data(driver, event_url)
-    event_resell_data = event_data[0]
-    print(event_resell_data)
 
-    is_free = None
-    if event_data[1] == "0":
-        is_free = True
-    else:
-        is_free = False
+    # Get the excluded keywords
+    print(event_data["event_organizer"])
+    excluded_keywords = get_excluded_keywords(event_data["event_organizer"])
+
     # Book and get the ticket url
-    ticket_data = book_event_and_upload(driver, event_url)
-    print(ticket_data)
+    ticket_data = book_event_and_upload(driver, event_url, excluded_keywords=excluded_keywords)
 
-    event_resell_data["tickData"] = []
+    ticket_formatted_data = []
 
-    event_resell_data["tickData"].append({"name": ticket_data[1]["ticket_name"], "media": ticket_data[0], "price": ticket_data[1]["ticket_price"]})
+    ticket_formatted_data.append({"name": ticket_data[1]["ticket_name"], "media": ticket_data[0], "price": ticket_data[1]["ticket_price"]})
     print("Event resell data sent to VivusHub:")
-    print(json.dumps(indent=4, obj=event_resell_data))
+    print(json.dumps(indent=4, obj=event_data))
+    print(json.dumps(indent=4, obj=ticket_formatted_data))
     print()
 
     # Send a POST request to the server with the event data
-    r = requests.post("https://api.vivushub.com/createResell", json=event_resell_data)
-    print("VivusHub response:", end="\n\n")
-    print(r.text)
-    return r.text
+    response_data = create_resell_event("PublicVH", event_data["event_name"], event_data["event_start_time"], event_data["event_end_time"],event_data["event_location"],"United Kingdom",event_data["purchase_source"],"create",ticket_formatted_data)
+    print(response_data)
+
+    return response_data
 
 
-def book_event_and_upload(driver, event_url, amount=1):
+def book_event_and_upload(driver, event_url, amount=1, excluded_keywords=[]):
     # Book the first event
-    ticket_data = book_event(driver, event_url, amount=amount)
+    ticket_data = book_event(driver, event_url, amount=amount, excluded_keywords=excluded_keywords)
     print(ticket_data)
 
     # Download the ticket

@@ -12,7 +12,7 @@ import pyperclip
 from datetime import datetime
 import re
 
-from .utilities import select_elements_by_text, convert_date_string, select_elements_by_text_contains
+from .utilities import convert_date_string
 
 
 def get_events_data(driver: webdriver, pages=10):
@@ -63,8 +63,6 @@ def get_event_data(driver, event_url):
     wait = WebDriverWait(driver, 10)
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.sc-3f2220de-8')))
 
-    lgusername = "PublicVH"
-
     # Get the event title
     event_name = driver.find_element(By.CSS_SELECTOR, '.sc-3f2220de-8').text
 
@@ -86,8 +84,6 @@ def get_event_data(driver, event_url):
     except:
         event_start_date = "N/A"
         event_end_date = "N/A"
-    
-    country = "United Kingdom"
 
     # Get the event location
     try:
@@ -112,16 +108,12 @@ def get_event_data(driver, event_url):
 
     # Put in a dictionary
     event_data = {
-        "lgusername": lgusername,
-        "data": {
-            "eventname": event_name,
-            # "event_organizer": event_organizer,
-            "eventstime": event_start_date,
-            "eventetime": event_end_date,
-            "eventlocation": event_location,
-            "eventcountry": country,
-            "purchaseSource": "Fixr",
-            "rType": "create",
-        }
+            "event_name": event_name,
+            "event_organizer": event_organizer,
+            "event_start_time": event_start_date,
+            "event_end_time": event_end_date,
+            "event_location": event_location,
+            "purchase_source": "Fixr",
+            "event_price": event_price,
     }
-    return event_data, event_price
+    return event_data

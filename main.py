@@ -1,7 +1,7 @@
 from selenium import webdriver
 from core.events_book import post_event_data
 from core.user_management import login
-from core.events_book import get_ticket_data
+from core.events_book import get_ticket_data, get_excluded_keywords
 from selenium.webdriver.chrome.service import Service
 
 
@@ -25,7 +25,7 @@ def main():
     login(driver, 'test@vivushub.com', 'testpass2023')
     # Send POST request to server with link to image
     data = post_event_data(driver, "https://fixr.co/event/event-by-tester-gamer-tickets-789878529")
-
+    #data = get_excluded_keywords()
     # Print the response
     print(data)
 

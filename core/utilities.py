@@ -13,24 +13,6 @@ from datetime import datetime
 import re
 
 
-def select_elements_by_text(driver: webdriver, selector, text):
-    # Find all span elements on the page
-    elements = driver.find_elements(By.CSS_SELECTOR, selector)
-
-    # Filter the span elements based on their text content
-    elements = [element for element in elements if element.text == text]
-    return elements
-
-
-def select_elements_by_text_contains(driver: webdriver, selector, text):
-    # Find all span elements on the page
-    elements = driver.find_elements(By.CSS_SELECTOR, selector)
-
-    # Filter the span elements based on their text content
-    elements = [element for element in elements if element.text.find(text)]
-    return elements
-
-
 def download_ticket(ticket_url):
     # Download the ticket pdf
     os.makedirs("downloads", exist_ok=True)
