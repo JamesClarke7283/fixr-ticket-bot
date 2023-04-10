@@ -101,6 +101,7 @@ def get_event_data(driver, event_url):
     wait.until(EC.presence_of_element_located((By.XPATH, '//b[contains(text(), "Tickets from") or contains(text(), "From free")]')))
 
     # Get the event price
+    event_price = ""
     try:
         event_price = driver.find_element(By.XPATH, '//b[contains(text(), "Tickets from")]').text
         print("Event Price:\t", event_price)

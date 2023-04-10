@@ -23,6 +23,9 @@ def get_ticket_data(driver):
         ticket = ticket_element.text.split("\n")
         ticket_name = ticket[0]
         ticket_price = ticket[1].replace("£", "")
+
+        if ticket_price.lower() == "Free".lower():
+            ticket_price = "0"
         tickets_data.append({'name': ticket_name, 'price': float(ticket_price)})
     return tickets_data
 
@@ -33,7 +36,7 @@ def get_tickets_inp_boxes(driver):
     return ticket_inputs
 
 
-def book_event(driver: webdriver, event_url, amount=1, is_free=True, excluded_keywords=[]):
+def book_event(driver: webdriver, event_url, amount=1, excluded_keywords=[]):
     if amount > 10:
         raise ValueError("You can only book 10 tickets at a time")
 
@@ -58,6 +61,7 @@ def book_event(driver: webdriver, event_url, amount=1, is_free=True, excluded_ke
                 ticket_index_selected = index
 
     print(ticket_index_selected)
+    is_free = all_tickets_data[ticket_index_selected]['price'] == 0
 
     # Find the input box
     print("get input boxes:")
@@ -81,25 +85,17 @@ def book_event(driver: webdriver, event_url, amount=1, is_free=True, excluded_ke
     # Opt out of the communications
     driver.find_element(By.XPATH, '//*[contains(@id, "radio-no")]').click()
 
-    # element = select_elements_by_text(driver, 'span', 'CONFIRM')
-    #try:
-    element = []
-    while len(element) < 1:
-        if is_free:
-            try:
-                element = select_elements_by_text(driver, 'span', 'CONFIRM')
-            except:
-                element = select_elements_by_text(driver, 'span', 'CONFIRM')
-                print("Couldn't find confirm button")
-        else:
-            try:
-                element = select_elements_by_text(driver, 'span', 'CONTINUE')
-            except:
-                element = select_elements_by_text(driver, 'span', 'CONTINUE')
-                print("Couldn't find continue button")
-            # element = select_elements_by_text(driver, "span", "CONTINUE")[0].click()
+    # Click the continue button or confirm button depending on if the ticket is free
+    if is_free:
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.presence_of_element_located((By.XPATH, '//button[.//span[contains(text(), "CONFIRM")]]')))
+        element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "CONFIRM")]]')
+    else:
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.presence_of_element_located((By.XPATH, '//button[.//span[contains(text(), "CONTINUE")]]')))
+        element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "CONTINUE")]]')
 
-    element[0].click()
+    element.click()
 
     # Check if needs payment
     if not is_free:
@@ -149,7 +145,7 @@ def post_event_data(driver, event_url):
     else:
         is_free = False
     # Book and get the ticket url
-    ticket_data = book_event_and_upload(driver, event_url, is_free=is_free)
+    ticket_data = book_event_and_upload(driver, event_url)
     print(ticket_data)
 
     event_resell_data["tickData"] = []
@@ -166,9 +162,9 @@ def post_event_data(driver, event_url):
     return r.text
 
 
-def book_event_and_upload(driver, event_url, amount=1, is_free=True):
+def book_event_and_upload(driver, event_url, amount=1):
     # Book the first event
-    ticket_data = book_event(driver, event_url, amount=amount, is_free=is_free)
+    ticket_data = book_event(driver, event_url, amount=amount)
     print(ticket_data)
 
     # Download the ticket

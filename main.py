@@ -24,7 +24,7 @@ def main():
 
     login(driver, 'test@vivushub.com', 'testpass2023')
     # Send POST request to server with link to image
-    data = post_event_data(driver, "https://fixr.co/event/event-by-tester-gamer-3-tickets-735680369")
+    data = post_event_data(driver, "https://fixr.co/event/event-by-tester-gamer-tickets-789878529")
 
     # Print the response
     print(data)
