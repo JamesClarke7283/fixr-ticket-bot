@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from vivus.vivus import Vivus
 from vivus.broker import Source
-
+from core.primitives.vivus_api import upload_media
 
 def main():
     # Replace this with the path to your webdriver (e.g., chromedriver)
@@ -18,12 +18,14 @@ def main():
     driver.maximize_window()
 
     # vh = Vivus(driver, Source.FIXR, 'PublicVH', 'james@james-clarke.ynh.fr', '7smrzVxzPuK6FPH')
-    vh = Vivus(driver, Source.FIXR, 'PublicVH', 'test@vivushub.com', 'testpass2023')
+    vh = Vivus(driver, Source.FIXR, 'PublicVH', 'test@vivushub.com', 'testpass2023', 'testpass2023')
 
     # Book a ticket via the VIVUS HUB API
-    response_data = vh.book_ticket("https://fixr.co/event/tiger-tiger-london-every-tuesday-get-me-in-tickets-217475303")
+    response_data = vh.book_ticket("https://fixr.co/event/event-by-tester-gamer-tickets-789878529")
 
     print(response_data)
+
+
     # Close the driver
     driver.quit()
 

@@ -32,20 +32,6 @@ def pdf_to_image(pdf_path, dpi=200):
     return image_path
 
 
-# Upload image to server with requests
-def upload_image(image_path):
-    file = {'file': open(image_path, 'rb')}
-    r = requests.post("https://media.james-clarke.ynh.fr/", files=file)
-
-    # Add get/ beteween the url and the unique id
-    elements = r.text.strip("\n").split("/")
-    elements.insert(3, "get")
-
-    # Join the elements back together
-    media_url = "/".join(elements)
-    return media_url
-
-
 def convert_date_string(date_string):
 
     # Remove ordinal (i.e., 'th', 'st', 'nd', 'rd') from the input string

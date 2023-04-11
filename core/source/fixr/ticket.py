@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from ...primitives.vivus_api import event_list_resale_owned
 
 class Ticket(BaseTicket):
     def __init__(self, driver, name: str, price: float, event: Event, web_element=None):

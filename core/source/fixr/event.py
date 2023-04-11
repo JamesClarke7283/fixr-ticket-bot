@@ -4,6 +4,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from ...primitives.utilities import convert_date_string
+import time 
+from datetime import datetime
+from ...primitives.vivus_api import event_list_resale_owned
+
 
 class Event(BaseEvent):
     def __init__(self, driver: webdriver, event_url: str):
@@ -29,19 +33,20 @@ class Event(BaseEvent):
         self.__price_from = float(self.price_from_raw.replace("Tickets from ", "").replace("£", ""))
         self.__description = driver.find_element(By.XPATH, '//div[h3[contains(text(), "About")]]').text
         try:
-            self.__opens = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Opens ")]').text)
+            self.__opens = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Opens")]').text)
         except:
-            self.__opens = "N/A"
+
+            self.__opens = time.strftime("%d/%m/%Y, %H:%M:%S", time.gmtime(time.mktime((datetime.now().year, 12, 1, 0, 0, 0, 0, 0, 0))))
 
         try:
-            self.__last_entry = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Last entry ")]').text)
+            self.__last_entry = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Last entry")]').text)
         except:
-            self.__last_entry = "N/A"
+            self.__last_entry = time.strftime("%d/%m/%Y, %H:%M:%S", time.gmtime(time.mktime((datetime.now().year, 12, 1, 0, 0, 0, 0, 0, 0))))
 
         try:
-            self.__closes = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Closes ")]').text)
+            self.__closes = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Closes")]').text)
         except:
-            self.__closes = "N/A"
+            self.__closes = time.strftime("%d/%m/%Y, %H:%M:%S", time.gmtime(time.mktime((datetime.now().year, 12, 1, 0, 0, 0, 0, 0, 0))))
 
     @property
     def title(self) -> str:
@@ -84,6 +89,13 @@ class Event(BaseEvent):
     @property
     def closes(self):
         return self.__closes
+
+    def is_bought(self, lgusername: str):
+        bought_tickets = event_list_resale_owned(lgusername, self.title)
+        if bought_tickets == []:
+            return False
+        else:
+            return True
 
     @property
     def all_properties(self):
