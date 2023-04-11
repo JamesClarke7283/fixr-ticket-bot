@@ -1,5 +1,5 @@
 from selenium import webdriver
-from core.primitives.vivus_api import get_excluded_keywords, create_resell_event, get_ticket_budget, upload_media
+from core.primitives.vivus_api import get_excluded_keywords, create_resell_event, get_ticket_budget, upload_media, filter_specific_dates
 # event_list_resale_owned
 from .broker import Broker, Source
 from core.primitives.utilities import pdf_to_image, download_ticket
@@ -25,10 +25,11 @@ class Vivus:
         """Book a ticket for the event"""
 
         event = self.broker.event(self.driver, event_url)
-
+        is_in_date = event.is_in_date()
+        print("Is in date\t", is_in_date)
         is_bought = event.is_bought(self.lgusername)
         print("Is bought\t", is_bought)
-        if not is_bought:
+        if not is_bought and is_in_date:
             print(json.dumps(event.all_properties, indent=4))
 
             # Get excluded keywords
@@ -43,7 +44,6 @@ class Vivus:
             # Filter the tickets by the budget
             ticket_list.tickets = ticket_list.filter_by_budget(budget["maxBudget"], budget["minBudget"])
 
-        
             ticket_checkout = None
             if len(ticket_list.tickets) > 0:
                 bought_ticket = ticket_list.tickets[0]
@@ -67,4 +67,7 @@ class Vivus:
                 data = create_resell_event("PublicVH", event.title, event.opens, event.closes, "N/A", "United Kingdom", self.source.value, ticket_data, event.poster_url)
                 print(data)
             else:
-                print("Ticket with this event already exists")
+                if is_bought:
+                    print("Ticket with this event already exists")
+                if not is_in_date:
+                    print("Event is not in date") 

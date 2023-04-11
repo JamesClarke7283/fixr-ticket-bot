@@ -3,6 +3,20 @@ import requests
 import json
 
 
+def filter_specific_dates(organiser: str = None):
+    """Filters the event list by specific dates"""
+    params = {"filterType": "filterDate"}
+
+    if organiser is not None:
+        params["filterOrganiser"] = organiser
+
+    with requests.post("https://api.vivushub.com/rc/filter", params=params) as response:
+        if response.status_code == 200:
+            json_response = response.json()["result"]
+            return json_response
+        else:
+            raise Exception(f"Request failed with status code {response.status_code}")
+
 def event_list_resale_owned(lgusername: str, query: str = None):
     """Checks if the ticket has already been purchased"""
     return event_list("resaleOwned", lgusername, query)

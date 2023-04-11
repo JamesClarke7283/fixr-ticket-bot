@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from ...primitives.utilities import convert_date_string
 import time 
 from datetime import datetime
-from ...primitives.vivus_api import event_list_resale_owned
+from ...primitives.vivus_api import event_list_resale_owned, filter_specific_dates
 import json
 
 
@@ -98,6 +98,18 @@ class Event(BaseEvent):
             return False
         else:
             return True
+
+    def is_in_date(self):
+        result = filter_specific_dates(self.organizer)
+        if result == []:
+            return False
+        elif result == 'error':
+            return True
+        else:
+            formatted_date = self.opens.split(",")[0].replace("/", "-")
+            if formatted_date in result:
+                return True
+            return False
 
     @property
     def all_properties(self):
