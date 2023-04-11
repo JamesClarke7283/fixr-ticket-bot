@@ -1,30 +1,14 @@
-from .event import Event
-from .checkout import Checkout, FixrCheckout
+from ...primitives.event import Event
+from ...primitives.ticket import Ticket as BaseTicket
+from ...primitives.ticket import TicketList as BaseTicketList
+from ...source.fixr.checkout import Checkout
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class Ticket:
-    def __init__(self, driver, name: str, price: float, event: Event, web_element=None):
-        self.driver = driver
-        self.name = name
-        self.price = price
-        self.web_element = web_element
-        self.event = event
-
-    def __repr__(self):
-        return f"{self.name} - £{self.price}"
-
-
-class TicketList:
-    def __init__(self, driver, event: Event):
-        self.driver = driver
-        self.tickets: list[Ticket] = []
-
-
-class FixrTicket(Ticket):
+class Ticket(BaseTicket):
     def __init__(self, driver, name: str, price: float, event: Event, web_element=None):
         super().__init__(driver, name, price, event, web_element)
 
@@ -37,10 +21,10 @@ class FixrTicket(Ticket):
         reserve_button = self.driver.find_element(By.XPATH, '//button[.//span[text()="Reserve"]]')
         reserve_button.click()
 
-        return FixrCheckout(self.driver, self)
+        return Checkout(self.driver, self)
 
 
-class FixrTicketList(TicketList):
+class TicketList(BaseTicketList):
     def __init__(self, driver: webdriver, event: Event):
         super().__init__(driver, event)
         self.driver = driver
@@ -63,13 +47,5 @@ class FixrTicketList(TicketList):
 
             if ticket_price.lower() == "Free".lower():
                 ticket_price = "0"
-            t = FixrTicket(self.driver, ticket_name, float(ticket_price), self.event, ticket_element)
+            t = Ticket(self.driver, ticket_name, float(ticket_price), self.event, ticket_element)
             self.tickets.append(t)
-
-    def filter_by_exclude_keywords(self, keywords: list[str]) -> list[Ticket]:
-        """Returns a list of tickets that do not contain any of the keywords"""
-        return [t for t in self.tickets if t.name not in keywords]
-
-    def filter_by_budget(self, max_price: float, min_price: float = 0) -> list[Ticket]:
-        """Returns a list of tickets that are less than or equal to the max price"""
-        return [t for t in self.tickets if t.price <= max_price and t.price >= min_price]

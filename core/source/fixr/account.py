@@ -1,19 +1,13 @@
+from ...primitives.account import Account as BaseAccount
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class Account:
-    def __init__(self, username: str, password: str):
-        self.username = username
-        self.password = password
-
-
-class FixrAccount(Account):
+class Account(BaseAccount):
     def __init__(self, driver: webdriver, username: str, password: str):
-        super().__init__(username, password)
-        self.driver = driver
+        super().__init__(driver, username, password)
 
     def login(self):
         """Signs in the User in to the Fixr website."""

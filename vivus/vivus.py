@@ -1,0 +1,62 @@
+from selenium import webdriver
+from core.primitives.vivus_api import get_excluded_keywords, create_resell_event, get_ticket_budget
+# event_list_resale_owned
+from .broker import Broker, Source
+from core.primitives.utilities import pdf_to_image, upload_image, download_ticket
+import json
+
+
+class Vivus:
+    def __init__(self, driver: webdriver, source: Source, lgusername: str, broker_site_username: str, broker_site_password: str):
+        self.driver = driver
+        self.lgusername = lgusername
+        self.broker_site_username = broker_site_username
+        self.broker_site_password = broker_site_password
+        self.source = source
+
+        self.broker = Broker(driver, source)
+
+        # Login to the selected source
+        self.broker_account = self.broker.account(driver, broker_site_username, broker_site_password)
+        self.broker_account.login()
+
+    def book_ticket(self, event_url: str):
+        """Book a ticket for the event"""
+
+        event = self.broker.event(self.driver, 'https://fixr.co/event/event-by-tester-gamer-tickets-789878529')
+        print(json.dumps(event.all_properties, indent=4))
+
+        # Get excluded keywords
+        excluded_keywords = get_excluded_keywords(event.organizer)
+        budget = get_ticket_budget()
+
+        # Get the ticket data
+        ticket_list = self.broker._ticket_list(self.driver, event)
+        # Filter the tickets by the excluded keywords
+        ticket_list.tickets = ticket_list.filter_by_exclude_keywords(excluded_keywords)
+
+        # Filter the tickets by the budget
+        ticket_list.tickets = ticket_list.filter_by_budget(budget["maxBudget"], budget["minBudget"])
+
+        ticket_checkout = None
+        if len(ticket_list.tickets) > 0:
+            bought_ticket = ticket_list.tickets[0]
+            ticket_checkout = bought_ticket.buy(1)
+
+            # Get the ticket pdf
+            pdf_url = ticket_checkout.ticket_pdf_url
+
+            # Download the ticket pdf
+            pdf_path = download_ticket(pdf_url)
+
+            # Convert the pdf to an image
+            image_path = pdf_to_image(pdf_path)
+
+            # Upload the image to the server
+            media_url = upload_image(image_path)
+            print(media_url)
+
+            # Create the event
+            ticket_data = [{"name": bought_ticket.name, "price": bought_ticket.price, "media": media_url}]
+            data = create_resell_event("PublicVH", event.title, "N/A", "N/A", "N/A", "United Kingdom", self.source.value, ticket_data=ticket_data)
+            print(data)

@@ -1,19 +1,11 @@
+from ...primitives.event import Event as BaseEvent
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class Event:
-    def __init__(self, driver: webdriver, event_url: str):
-        self.driver = driver
-        self.event_url = event_url
-
-        # Get Event Page
-        driver.get(event_url)
-
-
-class FixrEvent(Event):
+class Event(BaseEvent):
     def __init__(self, driver: webdriver, event_url: str):
         super().__init__(driver, event_url)
 
@@ -23,7 +15,7 @@ class FixrEvent(Event):
         wait.until(EC.presence_of_element_located((By.XPATH, '//b[contains(text(), "Tickets from") or contains(text(), "From free")]')))
 
         # Get the event price
-        event_price = "" 
+        event_price = ""
         element = driver.find_element(By.CSS_SELECTOR, '.sc-d5f38634-5 > div:nth-child(1) > b:nth-child(1)').text
         if element.lower() == "From Free".lower():
             event_price = "0"
