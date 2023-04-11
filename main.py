@@ -26,11 +26,7 @@ def main():
     response_data = vh.book_ticket("https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-689889932")
 
     print(response_data)
-    #event = vh.broker.event(driver, "https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-689889932")
-    #print(event.organizer)
-    #dates = filter_specific_dates(event.organizer)
 
-    #print(dates)
     # Close the driver
     driver.quit()
 

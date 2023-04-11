@@ -43,3 +43,17 @@ class Event:
     def all_properties(self):
         """Returns a dictionary of all the properties"""
         raise NotImplementedError
+
+
+class EventList:
+    def __init__(self, driver: webdriver, event_list_url: str):
+        self.driver = driver
+        self.event_list_url = event_list_url
+
+        # Get Event List Page
+        driver.get(event_list_url)
+
+    @property
+    def events(self) -> list[Event]:
+        """A list of all events on the page"""
+        raise NotImplementedError

@@ -1,4 +1,6 @@
 from ...primitives.event import Event as BaseEvent
+from ...primitives.event import EventList as BaseEventList
+from ...source.fixr.event import Event_From_JSON
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -215,3 +217,37 @@ class Event_From_JSON(BaseEvent):
             "opens": self.opens,
             "last_entry": self.last_entry,
             "closes": self.closes}
+
+
+class EventList(BaseEventList):
+    def __init__(self, driver, event_list_url):
+        super().__init__(driver, event_list_url)
+
+        self.__event_list = []
+
+        self.__event_list_url = event_list_url
+
+        self.__event_list = self.__get_event_list()
+
+    def __get_event_list(self):
+        event_list = []
+        event_list_elements = self.driver.find_elements(By.XPATH, '//div[@class="jckbTc"]/a')
+        for event_element in event_list_elements:
+            try:
+                event_list.append(Event_From_JSON(self.driver, event_element.get_attribute("href")))
+            except:
+                pass
+        return event_list
+
+    @property
+    def event_list(self):
+        """Returns a list of Event objects"""
+        return self.__event_list
+
+    def get_event_by_date(self, date: str):
+        """Returns a list of Event objects by the date of the event"""
+        event_list = []
+        for event in self.event_list:
+            if event.opens.split(",")[0].replace("/", "-") == date:
+                event_list.append(event)
+        return event_list
