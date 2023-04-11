@@ -27,7 +27,7 @@ class Event(BaseEvent):
             event_price = element
 
         self.__title = driver.find_element(By.XPATH, '//h1[@title]').text
-        self.__organizer = driver.find_element(By.XPATH, '//div[h3[contains(text(), "Organised by")]]').text
+        self.__organizer = driver.find_element(By.XPATH, '//h3[text()="Organised by"]/following-sibling::div//a').text
         self.__poster_url = driver.find_element(By.XPATH, f'//img[@alt="{self.title}"]').get_attribute("src")
         self.__price_from_raw = event_price
         self.__price_from = float(self.price_from_raw.replace("Tickets from ", "").replace("£", ""))

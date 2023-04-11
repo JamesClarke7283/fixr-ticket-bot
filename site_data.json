@@ -1,0 +1,710 @@
+{
+    "props": {
+      "pageProps": {
+        "status": 200,
+        "id": 789878529,
+        "meta": {
+          "id": 789878529,
+          "name": "Event By Tester Gamer",
+          "description": "Test Event By Tester Gamer",
+          "eventImages": [
+            "https://fixr-cdn.fixr.co/images/avatars/f02ff31a25394a318fce22f66d6bf482.png"
+          ],
+          "eventImageNoCrop": {
+            "url": "https://fixr-cdn.fixr.co/images/avatars/f02ff31a25394a318fce22f66d6bf482.png",
+            "width": 800,
+            "height": 400
+          },
+          "shareUrl": "https://fixr.co/event/event-by-tester-gamer-tickets-789878529",
+          "venue": {
+            "id": 8007,
+            "name": "Europe/London",
+            "latitude": 60.136873,
+            "longitude": -2.076586,
+            "country": "United Kingdom",
+            "city": "London",
+            "area": "England",
+            "address": "London",
+            "postcode": "W1",
+            "showVenue": true,
+            "logo": "https://fixr-cdn.fixr.co/images/venue/logo/f97906bfd0c7401aa80cb98218761e7c.jpg",
+            "online": true,
+            "routingPart": "8007"
+          },
+          "soldOut": false,
+          "cheapestTicket": {
+            "id": 517762,
+            "name": "Free",
+            "type": 1,
+            "price": 0,
+            "currency": "GBP",
+            "bookingFee": 0,
+            "effectivePrice": 0,
+            "absorbBookingFee": false
+          },
+          "openTime": 1681938000,
+          "openTimeVenueLocalised": "2023-04-19T22:00:00+01:00",
+          "timezone": "Europe/London",
+          "salesAccount": {
+            "id": 679036503,
+            "name": "John Demo",
+            "logo": "https://fixr-cdn.fixr.co/images/avatars/dac4163609014ea3becbe447c225e079.png"
+          },
+          "closeTimeVenueLocalised": "2023-04-20T06:00:00+01:00",
+          "isPrivate": false,
+          "routingPart": "event-by-tester-gamer-tickets-789878529"
+        },
+        "canonical": "/event/event-by-tester-gamer-tickets-789878529"
+      },
+      "data": {
+        "navigation_primary_heading": "Events",
+        "navigation_primary_links": [
+          {
+            "text": "Events Today",
+            "link": {
+              "id": "YqNphhEAACAArrd_",
+              "type": "customer_category_landing_page",
+              "tags": [],
+              "lang": "en-gb",
+              "slug": "0-none",
+              "first_publication_date": "2022-06-24T16:25:37+0000",
+              "last_publication_date": "2022-07-18T13:58:48+0000",
+              "uid": "today",
+              "link_type": "Document",
+              "isBroken": false
+            }
+          },
+          {
+            "text": "Events Tomorrow",
+            "link": {
+              "id": "YqNhXxEAACAAro68",
+              "type": "customer_category_landing_page",
+              "tags": [],
+              "lang": "en-gb",
+              "slug": "0-none",
+              "first_publication_date": "2022-07-13T13:20:48+0000",
+              "last_publication_date": "2022-07-18T13:58:47+0000",
+              "uid": "tomorrow",
+              "link_type": "Document",
+              "isBroken": false
+            }
+          },
+          {
+            "text": "Events This Week",
+            "link": {
+              "id": "YqNfYhEAACEAroUk",
+              "type": "customer_category_landing_page",
+              "tags": [],
+              "lang": "en-gb",
+              "slug": "0-none",
+              "first_publication_date": "2022-07-13T13:22:17+0000",
+              "last_publication_date": "2022-07-18T13:58:46+0000",
+              "uid": "this-week",
+              "link_type": "Document",
+              "isBroken": false
+            }
+          },
+          {
+            "text": "Events This Weekend",
+            "link": {
+              "id": "YqNhLBEAACIAro3H",
+              "type": "customer_category_landing_page",
+              "tags": [],
+              "lang": "en-gb",
+              "slug": "0-none",
+              "first_publication_date": "2022-07-13T13:22:54+0000",
+              "last_publication_date": "2022-07-18T13:58:46+0000",
+              "uid": "this-weekend",
+              "link_type": "Document",
+              "isBroken": false
+            }
+          },
+          {
+            "text": "Events Next Week",
+            "link": {
+              "id": "YqNhhREAACIAro9-",
+              "type": "customer_category_landing_page",
+              "tags": [],
+              "lang": "en-gb",
+              "slug": "0-none",
+              "first_publication_date": "2022-07-13T13:22:40+0000",
+              "last_publication_date": "2022-07-18T13:58:46+0000",
+              "uid": "next-week",
+              "link_type": "Document",
+              "isBroken": false
+            }
+          },
+          {
+            "text": "Events Next Weekend",
+            "link": {
+              "id": "YqNhoREAACMArpAE",
+              "type": "customer_category_landing_page",
+              "tags": [],
+              "lang": "en-gb",
+              "slug": "0-none",
+              "first_publication_date": "2022-07-13T13:22:29+0000",
+              "last_publication_date": "2022-07-18T13:58:47+0000",
+              "uid": "next-weekend",
+              "link_type": "Document",
+              "isBroken": false
+            }
+          }
+        ],
+        "navigation_secondary_links": [
+          {
+            "primary": {
+              "heading": "Events by category"
+            },
+            "items": [
+              {
+                "text": "Festivals",
+                "link": {
+                  "id": "YhzffxAAACIA063V",
+                  "type": "customer_category_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "5-festival",
+                  "first_publication_date": "2022-04-05T14:06:44+0000",
+                  "last_publication_date": "2022-08-02T16:56:58+0000",
+                  "uid": "festivals",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Brunch",
+                "link": {
+                  "id": "Y1EW1xAAACIAz7Pj",
+                  "type": "customer_category_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "22-brunch",
+                  "first_publication_date": "2022-10-20T11:00:13+0000",
+                  "last_publication_date": "2022-10-20T11:00:13+0000",
+                  "uid": "brunch",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Club Nights",
+                "link": {
+                  "id": "Yg5D7hEAACQAdrog",
+                  "type": "customer_category_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "10-club-night",
+                  "first_publication_date": "2022-02-17T12:53:28+0000",
+                  "last_publication_date": "2022-08-02T16:58:10+0000",
+                  "uid": "club-nights",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Comedy Shows",
+                "link": {
+                  "id": "YhzdjRAAACMA06SA",
+                  "type": "customer_category_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "3-comedy-event",
+                  "first_publication_date": "2022-04-05T14:35:32+0000",
+                  "last_publication_date": "2022-08-02T16:51:21+0000",
+                  "uid": "comedy-shows",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Concerts and Gigs",
+                "link": {
+                  "id": "Yhzd5xAAACQA06Yx",
+                  "type": "customer_category_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "6-concert-or-gig",
+                  "first_publication_date": "2022-04-05T14:12:40+0000",
+                  "last_publication_date": "2022-08-02T16:56:20+0000",
+                  "uid": "concerts-and-gigs",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Sports Events",
+                "link": {
+                  "id": "YhzgEBAAACEA07Cn",
+                  "type": "customer_category_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "13-sports-event",
+                  "first_publication_date": "2022-04-05T14:41:26+0000",
+                  "last_publication_date": "2022-10-20T11:07:09+0000",
+                  "uid": "sports-and-fitness-events",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "More events...",
+                "link": {
+                  "id": "YrLxQBEAACAADjco",
+                  "type": "index_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "all-events",
+                  "first_publication_date": "2022-07-06T15:41:58+0000",
+                  "last_publication_date": "2022-12-29T10:56:24+0000",
+                  "uid": "events",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              }
+            ],
+            "id": "link_group$f7d49ede-e9a3-488d-9a8f-b9d6b808a18c",
+            "slice_type": "link_group",
+            "slice_label": null
+          },
+          {
+            "primary": {
+              "heading": "Events by city"
+            },
+            "items": [
+              {
+                "text": "Events in Bristol",
+                "link": {
+                  "id": "YhjNuxEAAF8FpHUd",
+                  "type": "city_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "bristol",
+                  "first_publication_date": "2022-04-06T14:18:54+0000",
+                  "last_publication_date": "2022-04-12T11:12:30+0000",
+                  "uid": "bristol",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Events in Cambridge",
+                "link": {
+                  "id": "Yk2zOxAAACEA7Js_",
+                  "type": "city_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "cambridge",
+                  "first_publication_date": "2022-04-06T15:38:13+0000",
+                  "last_publication_date": "2022-07-14T15:16:45+0000",
+                  "uid": "cambridge",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Events in Manchester",
+                "link": {
+                  "id": "YhjNAxEAACMApHIv",
+                  "type": "city_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "manchester",
+                  "first_publication_date": "2022-04-06T14:11:07+0000",
+                  "last_publication_date": "2022-07-14T13:15:53+0000",
+                  "uid": "manchester",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Events in Nottingham",
+                "link": {
+                  "id": "YhjNVREAACMApHPh",
+                  "type": "city_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "nottingham",
+                  "first_publication_date": "2022-04-06T15:01:40+0000",
+                  "last_publication_date": "2022-07-14T13:14:43+0000",
+                  "uid": "nottingham",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Events in Oxford",
+                "link": {
+                  "id": "YhjNLREAAF8FpHML",
+                  "type": "city_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "oxford",
+                  "first_publication_date": "2022-04-06T15:42:38+0000",
+                  "last_publication_date": "2022-07-14T13:24:02+0000",
+                  "uid": "oxford",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Events in London",
+                "link": {
+                  "id": "YhjM-hEAACEApHIY",
+                  "type": "city_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "london",
+                  "first_publication_date": "2022-04-05T14:46:28+0000",
+                  "last_publication_date": "2022-07-14T13:01:15+0000",
+                  "uid": "london",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "More cities...",
+                "link": {
+                  "id": "YsVwYxEAACIAHE_V",
+                  "type": "index_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "all-cities",
+                  "first_publication_date": "2022-07-13T13:31:04+0000",
+                  "last_publication_date": "2022-10-21T16:52:35+0000",
+                  "uid": "cities",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              }
+            ],
+            "id": "link_group$89601638-a0fa-4f34-af49-4950d28dc7c7",
+            "slice_type": "link_group",
+            "slice_label": null
+          }
+        ],
+        "navigation_organiser_primary_heading": "How it works",
+        "navigation_organiser_primary_links": [
+          {
+            "text": "Sell Tickets",
+            "link": {
+              "id": "YMDGhhYAACcAA_09",
+              "type": "organiser_landing_page",
+              "tags": [],
+              "lang": "en-gb",
+              "slug": "organiser-landing-page",
+              "first_publication_date": "2021-06-09T13:47:53+0000",
+              "last_publication_date": "2023-02-13T16:48:41+0000",
+              "link_type": "Document",
+              "isBroken": false
+            }
+          }
+        ],
+        "navigation_organiser_secondary_links": [
+          {
+            "primary": {
+              "heading": "Products"
+            },
+            "items": [
+              {
+                "text": "FIXR Organiser",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://organiser.fixr.co/",
+                  "target": "_blank"
+                }
+              },
+              {
+                "text": "FIXR Entry Manager App",
+                "link": {
+                  "id": "X5rUbBEAACUAig4o",
+                  "type": "sales_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "fixr-entry-manager-app",
+                  "first_publication_date": "2020-11-24T14:07:12+0000",
+                  "last_publication_date": "2021-01-04T16:45:23+0000",
+                  "uid": "entry-manager-app",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Rep Platform",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://reps.fixr.co/",
+                  "target": "_blank"
+                }
+              }
+            ],
+            "id": "link_group$931d438c-1fd7-4786-ad72-2758f3bc589b",
+            "slice_type": "link_group",
+            "slice_label": null
+          },
+          {
+            "primary": {
+              "heading": "Resources"
+            },
+            "items": [
+              {
+                "text": "Blog",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://blog.fixr.co/",
+                  "target": "_blank"
+                }
+              },
+              {
+                "text": "Help",
+                "link": {
+                  "id": "YsW5dBEAACQAHWIq",
+                  "type": "contact_us",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "contact-us",
+                  "first_publication_date": "2022-07-18T09:35:18+0000",
+                  "last_publication_date": "2023-01-13T10:46:13+0000",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Pricing",
+                "link": {
+                  "id": "Yk1gqxAAACAA6xRq",
+                  "type": "pricing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "pricing-page",
+                  "first_publication_date": "2022-12-21T17:48:02+0000",
+                  "last_publication_date": "2023-01-25T09:58:15+0000",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              }
+            ],
+            "id": "link_group$6428a33e-5779-4350-8471-fe70d0be2eab",
+            "slice_type": "link_group",
+            "slice_label": null
+          }
+        ],
+        "footer_columns": [
+          {
+            "primary": {
+              "heading": "FOR TICKET BUYERS"
+            },
+            "items": [
+              {
+                "text": "Find events",
+                "link": {
+                  "id": "YrLxQBEAACAADjco",
+                  "type": "index_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "all-events",
+                  "first_publication_date": "2022-07-06T15:41:58+0000",
+                  "last_publication_date": "2022-12-29T10:56:24+0000",
+                  "uid": "events",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Find cities",
+                "link": {
+                  "id": "YsVwYxEAACIAHE_V",
+                  "type": "index_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "all-cities",
+                  "first_publication_date": "2022-07-13T13:31:04+0000",
+                  "last_publication_date": "2022-10-21T16:52:35+0000",
+                  "uid": "cities",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Download the app",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://fixr.co/download-apps"
+                }
+              },
+              {
+                "text": "Brand Ambassadors",
+                "link": {
+                  "id": "YqiUzREAACAAxgQz",
+                  "type": "brand_ambassadors_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "brand-ambassadors-landing-page",
+                  "first_publication_date": "2022-07-19T10:12:23+0000",
+                  "last_publication_date": "2022-09-13T09:01:52+0000",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Careers",
+                "link": {
+                  "id": "XSNCYxIAAB8ACNjq",
+                  "type": "careers_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "careers-page",
+                  "first_publication_date": "2019-07-08T13:17:27+0000",
+                  "last_publication_date": "2023-01-26T10:28:38+0000",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Blog",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://blog.fixr.co/"
+                }
+              },
+              {
+                "text": "Terms & Conditions",
+                "link": {
+                  "id": "W729YBIAADH7ChXV",
+                  "type": "legal",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "terms-and-conditions-for-customers",
+                  "first_publication_date": "2018-10-10T08:58:17+0000",
+                  "last_publication_date": "2023-03-30T10:51:41+0000",
+                  "uid": "customer-terms-and-conditions",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Cookie policy",
+                "link": {
+                  "id": "YWlAKRMAACIAoTy1",
+                  "type": "legal",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "cookie-policy",
+                  "first_publication_date": "2021-10-15T09:07:10+0000",
+                  "last_publication_date": "2022-01-20T14:40:24+0000",
+                  "uid": "cookie-policy",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              }
+            ],
+            "id": "footer_column$5a5ca5e7-fd62-4ae5-8793-8b136db2a9bd",
+            "slice_type": "footer_column",
+            "slice_label": null
+          },
+          {
+            "primary": {
+              "heading": "FOR EVENT ORGANISERS"
+            },
+            "items": [
+              {
+                "text": "Get started",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://organiser.fixr.co/register"
+                }
+              },
+              {
+                "text": "How it works",
+                "link": {
+                  "id": "YMDGhhYAACcAA_09",
+                  "type": "organiser_landing_page",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "organiser-landing-page",
+                  "first_publication_date": "2021-06-09T13:47:53+0000",
+                  "last_publication_date": "2023-02-13T16:48:41+0000",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "FAQs",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://help.fixr.co"
+                }
+              },
+              {
+                "text": "Entry Manager App (iOS)",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://apps.apple.com/gb/app/fixr-entry-manager/id725440573"
+                }
+              },
+              {
+                "text": "Entry Manager App (Android)",
+                "link": {
+                  "link_type": "Web",
+                  "url": "https://play.google.com/store/apps/details?id=com.fixr.app.entry&hl=en_GB&gl=US"
+                }
+              },
+              {
+                "text": "Privacy Policy",
+                "link": {
+                  "id": "W74nCxIAAJoRC4YZ",
+                  "type": "legal",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "privacy-policy",
+                  "first_publication_date": "2018-10-10T16:22:04+0000",
+                  "last_publication_date": "2022-12-07T14:23:01+0000",
+                  "uid": "privacy-policy",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              },
+              {
+                "text": "Terms & Conditions",
+                "link": {
+                  "id": "W7300BIAALT6CtX1",
+                  "type": "legal",
+                  "tags": [],
+                  "lang": "en-gb",
+                  "slug": "terms-and-conditions-for-organisers",
+                  "first_publication_date": "2018-10-10T12:47:30+0000",
+                  "last_publication_date": "2023-02-24T10:20:32+0000",
+                  "uid": "organiser-terms-and-conditions",
+                  "link_type": "Document",
+                  "isBroken": false
+                }
+              }
+            ],
+            "id": "footer_column$b70426bb-2d92-4b6f-80af-7978f735fec3",
+            "slice_type": "footer_column",
+            "slice_label": null
+          }
+        ]
+      }
+    },
+    "page": "/event/[...route]",
+    "query": {
+      "route": [
+        "event-by-tester-gamer-tickets-789878529"
+      ]
+    },
+    "buildId": "b8cf030",
+    "assetPrefix": "https://d2bnz3otli3k7u.cloudfront.net/release/5.1.1-b8cf030/website/prod",
+    "isFallback": false,
+    "gip": true,
+    "appGip": true,
+    "locale": "en-GB",
+    "locales": [
+      "en-GB",
+      "nb-NO",
+      "fi-FI",
+      "sv-SE",
+      "da-DK"
+    ],
+    "defaultLocale": "en-GB",
+    "scriptLoader": []
+  }

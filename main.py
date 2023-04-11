@@ -21,7 +21,7 @@ def main():
     vh = Vivus(driver, Source.FIXR, 'PublicVH', 'test@vivushub.com', 'testpass2023', 'testpass2023')
 
     # Book a ticket via the VIVUS HUB API
-    response_data = vh.book_ticket("https://fixr.co/event/event-by-tester-gamer-tickets-789878529")
+    response_data = vh.book_ticket("https://fixr.co/event/dirt-tickets-288395502")
 
     print(response_data)
 
