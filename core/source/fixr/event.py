@@ -7,8 +7,10 @@ from ...primitives.utilities import convert_date_string
 import time 
 from datetime import datetime
 from ...primitives.vivus_api import event_list_resale_owned
+import json
 
 
+@DeprecationWarning
 class Event(BaseEvent):
     def __init__(self, driver: webdriver, event_url: str):
         super().__init__(driver, event_url)
@@ -111,3 +113,93 @@ class Event(BaseEvent):
             "last_entry": self.last_entry,
             "closes": self.closes
         }
+
+
+class Event_From_JSON(BaseEvent):
+    def __init__(self, driver, event_url):
+        super().__init__(driver, event_url)
+
+        json_element = driver.find_element(By.XPATH, '//script[@id="__NEXT_DATA__" and @type="application/json"]')
+        data = json.loads(json_element.get_attribute("innerHTML"))
+
+        self.__title = data["props"]["pageProps"]["meta"]["name"]
+        self.__organizer = data["props"]["pageProps"]["meta"]["salesAccount"]["name"]
+        self.__poster_url = data["props"]["pageProps"]["meta"]["eventImages"][0]
+        self.__price_from = data["props"]["pageProps"]["meta"]["cheapestTicket"]["price"]
+        self.__description = driver.find_element(By.XPATH, '//div[h3[contains(text(), "About")]]').text
+        input_format = "%Y-%m-%dT%H:%M:%S%z"
+        output_format = "%d/%m/%Y, %H:%M"
+
+        try:
+            dt = datetime.strptime(data["props"]["pageProps"]["meta"]["openTimeVenueLocalised"], input_format)
+            self.__opens = dt.strftime(output_format)
+        except:
+            self.__opens = time.strftime("%d/%m/%Y, %H:%M:%S", time.gmtime(time.mktime((datetime.now().year, 12, 1, 0, 0, 0, 0, 0, 0))))
+
+        try:
+            self.__last_entry = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Last entry")]').text)
+        except:
+            self.__last_entry = time.strftime("%d/%m/%Y, %H:%M:%S", time.gmtime(time.mktime((datetime.now().year, 12, 1, 0, 0, 0, 0, 0, 0))))
+
+        try:
+            dt = datetime.strptime(data["props"]["pageProps"]["meta"]["closeTimeVenueLocalised"], input_format)
+            self.__closes = dt.strftime(output_format)
+        except:
+            self.__closes = time.strftime("%d/%m/%Y, %H:%M:%S", time.gmtime(time.mktime((datetime.now().year, 12, 1, 0, 0, 0, 0, 0, 0))))
+    
+    @property
+    def title(self) -> str:
+        """The name of the event"""
+        return self.__title
+
+    @property
+    def organizer(self) -> str:
+        """The name of the organizer of the event"""
+        return self.__organizer
+
+    @property
+    def poster_url(self) -> str:
+        """The media URL of the poster for the event"""
+        return self.__poster_url
+
+    @property
+    def price_from(self) -> float:
+        """The price from as a float, without the Tickets from and the £ symbol"""
+        return self.__price_from
+
+    @property
+    def description(self) -> str:
+        """Information about the event"""
+        return self.__description
+
+    @property
+    def opens(self):
+        return self.__opens
+
+    @property
+    def last_entry(self):
+        return self.__last_entry
+
+    @property
+    def closes(self):
+        return self.__closes
+
+    def is_bought(self, lgusername: str):
+        bought_tickets = event_list_resale_owned(lgusername, self.title)
+        if bought_tickets == []:
+            return False
+        else:
+            return True
+
+    @property
+    def all_properties(self):
+        """Returns a dictionary of all the properties"""
+        return {
+            "title": self.title,
+            "organizer": self.organizer,
+            "poster_url": self.poster_url,
+            "price_from": self.price_from,
+            "description": self.description,
+            "opens": self.opens,
+            "last_entry": self.last_entry,
+            "closes": self.closes}

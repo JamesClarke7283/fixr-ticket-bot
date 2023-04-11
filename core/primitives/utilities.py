@@ -43,5 +43,5 @@ def convert_date_string(date_string):
     input_date = input_date.replace(year=datetime.now().year)
 
     # Format the parsed date-time object
-    output_date_str = input_date.strftime("%d/%m/%Y, %H:%M")
+    output_date_str = input_date.strftime("%d/%m/%Y, %H:%M:%S")
     return output_date_str
