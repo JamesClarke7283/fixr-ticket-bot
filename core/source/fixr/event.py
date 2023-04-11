@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from ...primitives.utilities import convert_date_string
 
 class Event(BaseEvent):
     def __init__(self, driver: webdriver, event_url: str):
@@ -28,6 +28,20 @@ class Event(BaseEvent):
         self.__price_from_raw = event_price
         self.__price_from = float(self.price_from_raw.replace("Tickets from ", "").replace("£", ""))
         self.__description = driver.find_element(By.XPATH, '//div[h3[contains(text(), "About")]]').text
+        try:
+            self.__opens = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Opens ")]').text)
+        except:
+            self.__opens = "N/A"
+
+        try:
+            self.__last_entry = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Last entry ")]').text)
+        except:
+            self.__last_entry = "N/A"
+
+        try:
+            self.__closes = convert_date_string(driver.find_element(By.XPATH, '//span[contains(text(), "Closes ")]').text)
+        except:
+            self.__closes = "N/A"
 
     @property
     def title(self) -> str:
@@ -60,6 +74,18 @@ class Event(BaseEvent):
         return self.__description
 
     @property
+    def opens(self):
+        return self.__opens
+
+    @property
+    def last_entry(self):
+        return self.__last_entry
+
+    @property
+    def closes(self):
+        return self.__closes
+
+    @property
     def all_properties(self):
         """Returns a dictionary of all the properties"""
         return {
@@ -68,5 +94,8 @@ class Event(BaseEvent):
             "poster_url": self.poster_url,
             "price_from_raw": self.price_from_raw,
             "price_from": self.price_from,
-            "description": self.description
+            "description": self.description,
+            "opens": self.opens,
+            "last_entry": self.last_entry,
+            "closes": self.closes
         }

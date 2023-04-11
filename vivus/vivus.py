@@ -23,7 +23,7 @@ class Vivus:
     def book_ticket(self, event_url: str):
         """Book a ticket for the event"""
 
-        event = self.broker.event(self.driver, 'https://fixr.co/event/event-by-tester-gamer-tickets-789878529')
+        event = self.broker.event(self.driver, event_url)
         print(json.dumps(event.all_properties, indent=4))
 
         # Get excluded keywords
@@ -58,5 +58,5 @@ class Vivus:
 
             # Create the event
             ticket_data = [{"name": bought_ticket.name, "price": bought_ticket.price, "media": media_url}]
-            data = create_resell_event("PublicVH", event.title, "N/A", "N/A", "N/A", "United Kingdom", self.source.value, ticket_data=ticket_data)
+            data = create_resell_event("PublicVH", event.title, event.opens, event.closes, "N/A", "United Kingdom", self.source.value, ticket_data=ticket_data)
             print(data)

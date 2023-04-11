@@ -13,6 +13,16 @@ class Checkout(BaseCheckout):
         # Set the is_free attribute depending on if the price is 0
         is_free = ticket.price == 0
 
+        # If ticket protection option shows up, click the no button
+        try:
+            wait = WebDriverWait(driver, 2)
+            wait.until(EC.presence_of_element_located((By.XPATH, '//h3[contains(text(), "Ticket protection")]')))
+
+            # Click the no button
+            element = driver.find_element(By.ID, 'ticket-protection-no')
+            element.click()
+        except:
+            pass
         # Wait for the opt out of communications box to load
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.XPATH, '//*[contains(@id, "radio-no")]')))
