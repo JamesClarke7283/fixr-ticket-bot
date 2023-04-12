@@ -10,14 +10,15 @@ logging.basicConfig(level=LOGLEVEL)
 
 def filter_specific_dates(organiser: str = None):
     """Filters the event list by specific dates"""
-    params = {"filterType": "filterDate"}
+    data = {"filterType": "filterDate"}
 
     if organiser is not None:
-        params["filterOrganiser"] = organiser
+        data["filterOrganiser"] = organiser
 
-    with requests.post("https://api.vivushub.com/rc/filter", params=params) as response:
+    with requests.post("https://api.vivushub.com/rc/filter", data=data) as response:
         if response.status_code == 200:
-            json_response = response.json()["result"]
+            json_response = response.json()["result"] 
+            logging.info(f"Filter:\t{json_response}")
             return json_response
         else:
             raise Exception(f"Request failed with status code {response.status_code}")

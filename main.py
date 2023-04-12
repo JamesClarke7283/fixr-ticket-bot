@@ -28,15 +28,12 @@ def main():
     vh = Vivus(driver, Source.FIXR, 'PublicVH', 'test@vivushub.com', 'testpass2023', 'testpass2023')
 
     # Book a ticket via the VIVUS HUB API
-    #response_data = vh.book_ticket("https://fixr.co/event/event-by-tester-gamer-3-tickets-735680369")
-
-    #logging.info(response_data)
+    # response_data = vh.book_ticket("https://fixr.co/event/event-by-tester-gamer-tickets-789878529")
+    # logging.info(response_data)
 
     # Get an event list
-    el = EventList(driver, "https://fixr.co/search?page=1&type=events")
-
-    for event in el.event_list:
-        print(event)
+    for page_number in range(1, 99):
+        vh.book_tickets(driver, f"https://fixr.co/search?page={page_number}&type=events")
 
     # Close the driver
     driver.quit()

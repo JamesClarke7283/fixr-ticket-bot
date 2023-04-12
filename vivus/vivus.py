@@ -31,10 +31,10 @@ class Vivus:
         event = self.broker.event(self.driver, event_url)
 
         is_in_date = event.is_in_date()
-        logging.debug(f"Is in date:\t'{str(is_in_date)}'")
+        logging.info(f"Is in date:\t'{str(is_in_date)}'")
 
         is_bought = event.is_bought(self.lgusername)
-        logging.debug(f"Is bought:\t'{str(is_bought)}'")
+        logging.info(f"Is bought:\t'{str(is_bought)}'")
 
         is_event_finished = event.is_event_finished()
         logging.debug(f"Is event finished:\t'{str(is_event_finished)}'")
@@ -88,6 +88,8 @@ class Vivus:
                 data = create_resell_event("PublicVH", event.title, event.opens, event.closes, "N/A", "United Kingdom", self.source.value, ticket_data, event.poster_url)
                 logging.debug(f"Resell Event Response:\t {data}")
             else:
+                if is_bought is None:
+                    logging.warning(f"Ticket event: '{event.title}' query failed with error")
                 if is_bought:
                     logging.warning(f"Ticket event: '{event.title}' already exists")
                 if not is_in_date:
@@ -95,6 +97,12 @@ class Vivus:
                 if is_event_finished:
                     logging.warning(f"Event: '{event.title}' is finished")
 
-    def book_tickets(self, event_url_list: list[str]):
-        for event_url in event_url_list:
+    def book_tickets(self, driver: webdriver, event_list_page: str):
+        """Book tickets for the events in the event list page"""
+        event_list = self.broker.event_list(driver, event_list_page)
+        event_urls = []
+        for event in event_list.event_list:
+            event_urls.append(event.url)
+
+        for event_url in event_urls:
             self.book_ticket(event_url)
