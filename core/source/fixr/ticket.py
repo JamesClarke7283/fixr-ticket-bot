@@ -6,6 +6,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import logging
+from __init__ import LOGLEVEL
+
+logging.basicConfig(level=LOGLEVEL)
 
 
 class Ticket(BaseTicket):
@@ -15,7 +19,8 @@ class Ticket(BaseTicket):
     def buy(self, amount: int = 1):
         if amount > 10:
             raise ValueError("You can only book 10 tickets at a time")
-        ticket_amount_input_box = self.web_element.find_element(By.XPATH, '//input[@type="tel"]')
+        logging.info(f"Selected web element for buying:\t'{self.web_element.text}'")
+        ticket_amount_input_box = self.web_element.find_element(By.XPATH, f'//div[contains(.//text(), "{self.name}")]//input[@type="tel"]')
         ticket_amount_input_box.send_keys(str(amount))
 
         reserve_button = self.driver.find_element(By.XPATH, '//button[.//span[text()="Reserve"]]')
@@ -47,5 +52,12 @@ class TicketList(BaseTicketList):
 
             if ticket_price.lower() == "Free".lower():
                 ticket_price = "0"
+            logging.info(f"Found ticket: {ticket_name} - £{ticket_price}")
+            logging.info(f"Ticket element: {ticket_element.text}")
             t = Ticket(self.driver, ticket_name, float(ticket_price), self.event, ticket_element)
             self.tickets.append(t)
+
+    def __repr__(self):
+        output_string = ""
+        for t in self.tickets:
+            output_string += repr(t)

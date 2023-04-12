@@ -1,4 +1,8 @@
 from selenium import webdriver
+import logging
+from __init__ import LOGLEVEL
+
+logging.basicConfig(level=LOGLEVEL)
 
 
 class Event:

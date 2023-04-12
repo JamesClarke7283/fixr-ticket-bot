@@ -1,6 +1,11 @@
 """This modules deals with API requests to the VIVUS API"""
 import requests
 import json
+import logging
+
+from __init__ import LOGLEVEL
+
+logging.basicConfig(level=LOGLEVEL)
 
 
 def filter_specific_dates(organiser: str = None):
@@ -17,6 +22,7 @@ def filter_specific_dates(organiser: str = None):
         else:
             raise Exception(f"Request failed with status code {response.status_code}")
 
+
 def event_list_resale_owned(lgusername: str, query: str = None):
     """Checks if the ticket has already been purchased"""
     return event_list("resaleOwned", lgusername, query)
@@ -30,11 +36,11 @@ def event_list(request_type: str, lgusername: str, query: str = None) -> dict:
     if query is not None:
         payload["q"] = query
 
-    print(payload)
+    logging.debug(payload)
 
     with requests.get("https://api.vivushub.com/eventlist", params=payload) as response:
         if response.status_code == 200:
-            print(f"Response Text: {response.text}")
+            logging.debug(f"Response Text: {response.text}")
             json_response = response.json()["result"]
             return json_response
         else:
@@ -58,6 +64,7 @@ def get_budget(request_type, filterOrganiser=None, filterDate=None):
     with requests.post("https://api.vivushub.com/rc/budget", data=payload) as response:
         if response.status_code == 200:
             json_response = response.json()["result"]
+            logging.debug(f"Budget:\t{json_response}")
             return json_response
         else:
             raise Exception(f"Request failed with status code {response.status_code}")
@@ -86,10 +93,10 @@ def resell_event(lgusername: str, event_name: str, event_start_time: str, event_
     if poster_url is not None:
         request_data["data"]["imgUrl"] = poster_url
 
-    print(json.dumps(request_data, indent=4))
+    logging.debug(json.dumps(request_data, indent=4))
 
     with requests.post("https://api.vivushub.com/createResell", json=request_data) as r:
-        print(r.text)
+        logging.debug(r.text)
         return r.text
 
 

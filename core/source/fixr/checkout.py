@@ -3,7 +3,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, TimeoutException
+import logging
+from __init__ import LOGLEVEL
+
+logging.basicConfig(level=LOGLEVEL)
 
 
 class Checkout(BaseCheckout):
@@ -21,8 +25,12 @@ class Checkout(BaseCheckout):
             # Click the no button
             element = driver.find_element(By.ID, 'ticket-protection-no')
             element.click()
-        except:
-            pass
+        except NoSuchElementException:
+            logging.error(f"Ticket protection not found, for ticket '{ticket.name}'")
+        except ElementNotInteractableException:
+            logging.error(f"Ticket protection not interactable, for ticket '{ticket.name}'")
+        except TimeoutException:
+            logging.error(f"Ticket protection timeout, for ticket '{ticket.name}'")
         # Wait for the opt out of communications box to load
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.XPATH, '//*[contains(@id, "radio-no")]')))
@@ -66,7 +74,7 @@ class Checkout(BaseCheckout):
                 except ElementNotInteractableException:
                     element = None
 
-        print("View tickets button clicked", element)
+        logging.debug("View tickets button clicked", element)
 
         # Wait for the tickets to load
         wait = WebDriverWait(driver, 10)

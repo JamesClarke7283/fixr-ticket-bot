@@ -2,8 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from vivus.vivus import Vivus
 from vivus.broker import Source
-from core.primitives.vivus_api import upload_media, filter_specific_dates
-from core.source.fixr.event import Event_From_JSON
+from core.primitives.vivus_api import upload_media, filter_specific_dates, get_ticket_budget
+from core.source.fixr.event import Event, EventList
+import logging
+from os import environ as os_environ
+from __init__ import LOGLEVEL
+
+logging.basicConfig(level=LOGLEVEL)
 
 
 def main():
@@ -23,9 +28,15 @@ def main():
     vh = Vivus(driver, Source.FIXR, 'PublicVH', 'test@vivushub.com', 'testpass2023', 'testpass2023')
 
     # Book a ticket via the VIVUS HUB API
-    response_data = vh.book_ticket("https://fixr.co/event/mr-whites-at-night-by-marco-pierre-white-leicester-tickets-689889932")
+    #response_data = vh.book_ticket("https://fixr.co/event/event-by-tester-gamer-3-tickets-735680369")
 
-    print(response_data)
+    #logging.info(response_data)
+
+    # Get an event list
+    el = EventList(driver, "https://fixr.co/search?page=1&type=events")
+
+    for event in el.event_list:
+        print(event)
 
     # Close the driver
     driver.quit()
