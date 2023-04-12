@@ -3,6 +3,13 @@ This is a ticket bot written for VivusHub.
 Currently supports
 - Fixr
 
+# Dependencies
+- python 3.10 or above
+- selenium
+- pdf2image
+- requests
+- pyperclip
+
 # Events 
 
 ## Testing
