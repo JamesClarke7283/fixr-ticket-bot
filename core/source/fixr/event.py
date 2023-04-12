@@ -156,8 +156,11 @@ class EventList(BaseEventList):
 
     def __get_event_list(self):
         event_list = []
-        checkbox_hide_sold_out = self.driver.find_element(By.XPATH, '//label[text()="Hide sold out events"]/preceding-sibling::input[@type="checkbox"]')
-        checkbox_hide_sold_out.click()
+        try:
+            checkbox_hide_sold_out = self.driver.find_element(By.XPATH, '//label[text()="Hide sold out events"]/preceding-sibling::input[@type="checkbox"]')
+            checkbox_hide_sold_out.click()
+        except:
+            logging.error("No sold out ticket button found")
         self.driver.implicitly_wait(5)
 
         event_list_elements = self.driver.find_elements(By.XPATH, '//a[starts-with(@href, "/event/")]')

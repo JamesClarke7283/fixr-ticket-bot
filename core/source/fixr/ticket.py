@@ -20,8 +20,8 @@ class Ticket(BaseTicket):
         if amount > 10:
             raise ValueError("You can only book 10 tickets at a time")
         self.driver.get(self.event.event_url + "/tickets")
-        logging.info(f"Selected web element for buying:\t'{self.web_element.text}'")
-        ticket_amount_input_box = self.web_element.find_element(By.XPATH, f'//div[contains(.//text(), "{self.name}")]//input[@type="tel"]')
+        # logging.info(f"Selected web element for buying:\t'{self.web_element.text}'")
+        ticket_amount_input_box = self.driver.find_element(By.XPATH, f'//div[contains(.//text(), "{self.name}")]//input[@type="tel"]')
         ticket_amount_input_box.send_keys(str(amount))
 
         reserve_button = self.driver.find_element(By.XPATH, '//button[.//span[text()="Reserve"]]')

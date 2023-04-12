@@ -58,27 +58,37 @@ class Checkout(BaseCheckout):
             # Click the pay button
             element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "PAY NOW")]]')
             element.click()
+        
+        # Wait for the payment to complete
+        # Is insufficient funds
+        self.is_insufficient_funds = False
+        try:
+            wait = WebDriverWait(driver, 10)
+            wait.until(EC.visibility_of_element_located((By.XPATH, '//div[contains(text(), "Your card has insufficient funds.")]')))
+            self.is_insufficient_funds = True
+        except:
+            self.is_insufficient_funds = False
 
         # Wait for view tickets button to appear
-
-        # Click the view tickets button
-        element = None
-        while element is None:
-            try:
-                element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "View tickets")]]')
-            except NoSuchElementException:
-                element = None
-            if element is not None:
+        if not self.is_insufficient_funds:
+            # Click the view tickets button
+            element = None
+            while element is None:
                 try:
-                    element.click()
-                except ElementNotInteractableException:
+                    element = driver.find_element(By.XPATH, '//button[.//span[contains(text(), "View tickets")]]')
+                except NoSuchElementException:
                     element = None
+                if element is not None:
+                    try:
+                        element.click()
+                    except ElementNotInteractableException:
+                        element = None
 
-        logging.debug("View tickets button clicked", element)
+            logging.debug("View tickets button clicked", element)
 
-        # Wait for the tickets to load
-        wait = WebDriverWait(driver, 10)
-        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.sc-86ac4539-1 > a:nth-child(4)')))
+            # Wait for the tickets to load
+            wait = WebDriverWait(driver, 10)
+            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.sc-86ac4539-1 > a:nth-child(4)')))
 
-        # Return the ticket pdf url
-        self.ticket_pdf_url = driver.find_element(By.CSS_SELECTOR, '.sc-86ac4539-1 > a:nth-child(4)').get_attribute('href')
+            # Return the ticket pdf url
+            self.ticket_pdf_url = driver.find_element(By.CSS_SELECTOR, '.sc-86ac4539-1 > a:nth-child(4)').get_attribute('href')

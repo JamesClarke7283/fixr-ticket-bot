@@ -40,6 +40,7 @@ class Vivus:
         logging.debug(f"Is event finished:\t'{str(is_event_finished)}'")
 
         if not is_bought and is_in_date and not is_event_finished:
+            self.driver.get(event_url)
             logging.debug(json.dumps(event.all_properties, indent=4))
 
             # Get excluded keywords
@@ -64,29 +65,33 @@ class Vivus:
 
                 ticket_checkout = bought_ticket.buy(1)
                 logging.info(f"Ticket Checkout:\t'{ticket_checkout}'")
+                if ticket_checkout.is_insufficient_funds:
+                    logging.error("Insufficient funds")
+                    return None
+                else:
+                    # Get the ticket pdf
+                    pdf_url = ticket_checkout.ticket_pdf_url
+                    logging.info(f"PDF URL:\t'{pdf_url}'")
 
-                # Get the ticket pdf
-                pdf_url = ticket_checkout.ticket_pdf_url
-                logging.debug(f"PDF URL:\t'{pdf_url}'")
+                    # Download the ticket pdf
+                    pdf_path = download_ticket(pdf_url)
+                    logging.info(f"PDF Path:\t'{pdf_path}'")
 
-                # Download the ticket pdf
-                pdf_path = download_ticket(pdf_url)
-                logging.debug(f"PDF Path:\t'{pdf_path}'")
+                    # Convert the pdf to an image
+                    image_path = pdf_to_image(pdf_path)
+                    logging.info(f"Image Path:\t'{image_path}'")
 
-                # Convert the pdf to an image
-                image_path = pdf_to_image(pdf_path)
-                logging.debug(f"Image Path:\t'{image_path}'")
+                    # Upload the image to the server
+                    media_url = upload_media(image_path, self.upload_password)["mediaUrl"]
+                    logging.info(f"Media URL:\t'{media_url}'")
 
-                # Upload the image to the server
-                media_url = upload_media(image_path, self.upload_password)["mediaUrl"]
-                logging.debug(f"Media URL:\t'{media_url}'")
+                    # Create the event
+                    ticket_data = [{"name": bought_ticket.name, "price": bought_ticket.price, "media": media_url}]
+                    logging.info(f"Ticket Data:\t {ticket_data}")
 
-                # Create the event
-                ticket_data = [{"name": bought_ticket.name, "price": bought_ticket.price, "media": media_url}]
-                logging.debug(f"Ticket Data:\t {ticket_data}")
-
-                data = create_resell_event("PublicVH", event.title, event.opens, event.closes, "N/A", "United Kingdom", self.source.value, ticket_data, event.poster_url)
-                logging.debug(f"Resell Event Response:\t {data}")
+                    data = create_resell_event("PublicVH", event.title, event.opens, event.closes, "N/A", "United Kingdom", self.source.value, ticket_data, event.poster_url)
+                    logging.info(f"Resell Event Response:\t {data}")
+                    return data
             else:
                 if is_bought is None:
                     logging.warning(f"Ticket event: '{event.title}' query failed with error")
@@ -96,11 +101,12 @@ class Vivus:
                     logging.warning(f"Event: '{event.title}' is not in date")
                 if is_event_finished:
                     logging.warning(f"Event: '{event.title}' is finished")
+                return None
 
     def book_tickets(self, driver: webdriver, event_list_page: str):
         """Book tickets for the events in the event list page"""
         event_list = self.broker.event_list(driver, event_list_page)
-        event_urls = []
+        event_urls = ["https://fixr.co/event/event-by-tester-gamer-tickets-789878529"]
         for event in event_list.event_list:
             event_urls.append(event.url)
 
