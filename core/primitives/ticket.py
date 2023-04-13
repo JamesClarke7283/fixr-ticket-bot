@@ -26,10 +26,10 @@ class TicketList:
         self.driver = driver
         self.tickets: list[Ticket] = []
 
-    def filter_by_exclude_keywords(self, keywords: list[str]) -> list[Ticket]:
+    def filter_by_exclude_keywords(self, keywords: list) -> list:
         """Returns a list of tickets that do not contain any of the keywords"""
         return [t for t in self.tickets if t.name not in keywords]
 
-    def filter_by_budget(self, max_price: float, min_price: float = 0) -> list[Ticket]:
+    def filter_by_budget(self, max_price: float, min_price: float = 0) -> list:
         """Returns a list of tickets that are less than or equal to the max price"""
         return [t for t in self.tickets if t.price <= max_price and t.price >= min_price]

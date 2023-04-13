@@ -71,7 +71,7 @@ def get_budget(request_type, filterOrganiser=None, filterDate=None):
             raise Exception(f"Request failed with status code {response.status_code}")
 
 
-def get_excluded_keywords(organizer: str = None) -> list[str]:
+def get_excluded_keywords(organizer: str = None) -> list:
     """Gets the forbidden keywords from the Vivus API"""
     excluded_keywords = []
     if organizer is None:
@@ -83,12 +83,12 @@ def get_excluded_keywords(organizer: str = None) -> list[str]:
     return excluded_keywords
 
 
-def create_resell_event(lgusername: str, event_name: str, event_start_time: str, event_end_time: str, event_location: str, event_country: str, purchase_source: str, ticket_data: list[dict], poster_url=None) -> str:
+def create_resell_event(lgusername: str, event_name: str, event_start_time: str, event_end_time: str, event_location: str, event_country: str, purchase_source: str, ticket_data: list, poster_url=None) -> str:
     """Creates a resell on the Vivus API"""
     return resell_event(lgusername, event_name, event_start_time, event_end_time, event_location, event_country, purchase_source, "create", ticket_data, poster_url)
 
 
-def resell_event(lgusername: str, event_name: str, event_start_time: str, event_end_time: str, event_location: str, event_country: str, purchase_source: str, request_type: str, ticket_data: list[dict], poster_url=None) -> str:
+def resell_event(lgusername: str, event_name: str, event_start_time: str, event_end_time: str, event_location: str, event_country: str, purchase_source: str, request_type: str, ticket_data: list, poster_url=None) -> str:
     """Creates a resell on the Vivus API"""
     request_data = {"lgusername": lgusername, "data": {"eventname": event_name, "eventstime": event_start_time, "eventetime": event_end_time, "eventlocation": event_location, "eventcountry": event_country, "purchaseSource": purchase_source, "rType": request_type}, "tickData": ticket_data}
     if poster_url is not None:

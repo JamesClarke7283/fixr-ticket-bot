@@ -7,13 +7,13 @@ from core.primitives.account import Account
 from core.primitives.event import Event, EventList
 from core.primitives.ticket import TicketList
 import logging
-from enum import StrEnum
+from enum import Enum
 from __init__ import LOGLEVEL
 
 logging.basicConfig(level=LOGLEVEL)
 
 
-class Source(StrEnum):
+class Source(Enum):
     FIXR = "Fixr"
 
 
@@ -25,12 +25,11 @@ class Broker:
 
         logging.debug(f"Broker Source chosen:\t'{self.broker.value}'")
 
-        match self.broker:
-            case Source.FIXR:
-                self._account = FixrAccount
-                self._event = FixrEvent
-                self._event_list = FixrEventList
-                self._ticket_list = FixrTicketList
+        if self.broker == Source.FIXR:
+            self._account = FixrAccount
+            self._event = FixrEvent
+            self._event_list = FixrEventList
+            self._ticket_list = FixrTicketList
 
         logging.debug(f"Broker Account:\t'{self._account}'")
         logging.debug(f"Broker Event:\t'{self._event}'")

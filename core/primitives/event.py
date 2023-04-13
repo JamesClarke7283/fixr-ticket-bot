@@ -58,6 +58,6 @@ class EventList:
         driver.get(event_list_url)
 
     @property
-    def events(self) -> list[Event]:
+    def events(self) -> list:
         """A list of all events on the page"""
         raise NotImplementedError
