@@ -4,7 +4,12 @@ Currently supports
 - Fixr
 
 # Dependencies
+
+## System Dependencies
 - python 3.10 or above
+- xclip
+  
+## Python Dependencies
 - selenium
 - pdf2image
 - requests
