@@ -33,7 +33,7 @@ def main():
 
     # Get an event list
     #for page_number in range(1, 99):
-    vh.book_tickets(driver, f"https://fixr.co/venue/3464")
+    vh.book_tickets(driver, f"https://fixr.co/organiser/679036503")
 
     # Close the driver
     driver.quit()

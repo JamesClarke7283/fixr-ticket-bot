@@ -11,7 +11,7 @@ from ...primitives.vivus_api import event_list_resale_owned, filter_specific_dat
 import json
 import logging
 from __init__ import LOGLEVEL
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException, UnexpectedAlertPresentException
 
 
 logging.basicConfig(level=LOGLEVEL)
@@ -21,7 +21,17 @@ class Event(BaseEvent):
     def __init__(self, driver, event_url):
         super().__init__(driver, event_url)
 
+        wait = WebDriverWait(driver, 10)
+        # wait until alert is present
+        try:
+            wait.until(EC.alert_is_present())
+            driver.switch_to.alert.accept()
+        except:
+            pass
+        wait.until(EC.presence_of_element_located((By.XPATH, '//script[@id="__NEXT_DATA__" and @type="application/json"]')))
+
         json_element = driver.find_element(By.XPATH, '//script[@id="__NEXT_DATA__" and @type="application/json"]')
+
         data = json.loads(json_element.get_attribute("innerHTML"))
         self.__url = event_url
         self.__title = data["props"]["pageProps"]["meta"]["name"]
