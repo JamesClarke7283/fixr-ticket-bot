@@ -106,7 +106,7 @@ class Vivus:
     def book_tickets(self, driver: webdriver, event_list_page: str):
         """Book tickets for the events in the event list page"""
         event_list = self.broker.event_list(driver, event_list_page)
-        event_urls = ["https://fixr.co/event/event-by-tester-gamer-tickets-789878529"]
+        event_urls = []
         for event in event_list.event_list:
             event_urls.append(event.url)
 
