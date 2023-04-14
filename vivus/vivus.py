@@ -64,6 +64,16 @@ class Vivus:
                 logging.info(f"Bought ticket element:\t'{bought_ticket.web_element.text}'")
 
                 ticket_checkout = bought_ticket.buy(1)
+                if ticket_checkout is None:
+                    t_count = 1
+                    while ticket_checkout is None:
+                        try:
+                            bought_ticket = ticket_list.tickets[t_count]
+                            ticket_checkout = bought_ticket.buy(1)
+                            t_count += 1
+                        except IndexError:
+                            logging.error("No tickets available")
+                            return None
                 if ticket_checkout.ticket_pdf_url is not None:
                     logging.info(f"Ticket Checkout:\t'{ticket_checkout}'")
                     if ticket_checkout.is_insufficient_funds:

@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 import logging
 from __init__ import LOGLEVEL
 
@@ -22,9 +23,12 @@ class Ticket(BaseTicket):
         self.driver.get(self.event.event_url + "/tickets")
 
         # logging.info(f"Selected web element for buying:\t'{self.web_element.text}'")
-        ticket_amount_input_box = self.driver.find_element(By.XPATH, f'//div[contains(.//text(), "{self.name}")]//input[@type="tel"]')
-        ticket_amount_input_box.send_keys(str(amount))
-
+        try:
+            ticket_amount_input_box = self.driver.find_element(By.XPATH, f'//div[contains(.//text(), "{self.name}")]//input[@type="tel"]')
+            ticket_amount_input_box.send_keys(str(amount))
+        except NoSuchElementException:
+            logging.error(f"Could not find ticket amount input box for ticket '{self.name}'")
+            return None
         # wait for reserve button to load
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.presence_of_element_located((By.XPATH, '//button[.//span[text()="Reserve"]]')))
