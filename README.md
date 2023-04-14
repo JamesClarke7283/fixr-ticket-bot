@@ -6,7 +6,7 @@ Currently supports
 # Dependencies
 
 ## System Dependencies
-- python 3.10 or above
+- python 3.7 or above
 - poppler
   
 ## Python Dependencies
