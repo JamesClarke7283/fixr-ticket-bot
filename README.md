@@ -7,13 +7,12 @@ Currently supports
 
 ## System Dependencies
 - python 3.10 or above
-- xclip
+- poppler
   
 ## Python Dependencies
 - selenium
 - pdf2image
 - requests
-- pyperclip
 
 # Events 
 
