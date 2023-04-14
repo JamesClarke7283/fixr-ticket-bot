@@ -51,6 +51,7 @@ class Checkout(BaseCheckout):
 
         element.click()
 
+        time.sleep(5)
         driver.implicitly_wait(5)
         # Check if needs payment
         if not is_free:

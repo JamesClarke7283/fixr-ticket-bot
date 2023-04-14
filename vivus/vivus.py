@@ -56,6 +56,9 @@ class Vivus:
             ticket_list.tickets = ticket_list.filter_by_budget(budget["maxBudget"], budget["minBudget"])
             logging.info(f"Filtered Tickets:\t{ticket_list.tickets}")
 
+            # Filter the tickets by price in ascending order
+            ticket_list.tickets = sorted(ticket_list.tickets, key=lambda ticket: ticket.price)[::-1]
+
             ticket_checkout = None
             if len(ticket_list.tickets) > 0:
                 bought_ticket = ticket_list.tickets[0]
